@@ -22,6 +22,7 @@ export type Database = {
           non_dominant_hand_image_url: string | null
           reading_result: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           age: number
@@ -35,6 +36,7 @@ export type Database = {
           non_dominant_hand_image_url?: string | null
           reading_result?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           age?: number
@@ -48,6 +50,37 @@ export type Database = {
           non_dominant_hand_image_url?: string | null
           reading_result?: string | null
           updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+          username?: string | null
         }
         Relationships: []
       }

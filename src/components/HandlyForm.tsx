@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -137,22 +136,22 @@ const HandlyForm: React.FC = () => {
 
   try {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-sand-50 to-sand-100 py-12 px-4">
         <div className="max-w-2xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold text-indigo-900 mb-4">
+          {/* Enhanced Header */}
+          <header className="text-center mb-16">
+            <h1 className="text-6xl md:text-7xl font-playfair font-bold text-sand-900 mb-6 tracking-wide">
               Handly
             </h1>
-            <p className="text-lg text-indigo-700 italic">
+            <p className="text-xl md:text-2xl font-playfair italic text-sand-700 font-medium">
               There's a map in your hand.
             </p>
-          </div>
+          </header>
 
           {/* Form */}
-          <Card className="bg-white/80 backdrop-blur-sm shadow-xl">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl text-indigo-900">
+          <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-sand-200">
+            <CardHeader className="text-center pb-8">
+              <CardTitle className="text-3xl font-playfair text-sand-900">
                 Discover Your Hand's Story
               </CardTitle>
             </CardHeader>
@@ -160,13 +159,13 @@ const HandlyForm: React.FC = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name */}
                 <div>
-                  <label className="block text-sm font-medium text-indigo-800 mb-2">
+                  <label className="block text-sm font-medium text-sand-800 mb-2">
                     Your Name *
                   </label>
                   <Input 
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="bg-white/50"
+                    className="bg-white/70 border-sand-300 focus:border-sand-500 focus:ring-sand-500"
                     placeholder="Enter your name"
                     required
                   />
@@ -174,14 +173,14 @@ const HandlyForm: React.FC = () => {
 
                 {/* Age */}
                 <div>
-                  <label className="block text-sm font-medium text-indigo-800 mb-2">
+                  <label className="block text-sm font-medium text-sand-800 mb-2">
                     Your Age *
                   </label>
                   <Input 
                     type="number"
                     value={formData.age}
                     onChange={(e) => handleInputChange('age', e.target.value)}
-                    className="bg-white/50"
+                    className="bg-white/70 border-sand-300 focus:border-sand-500 focus:ring-sand-500"
                     placeholder="Enter your age"
                     min="1"
                     max="150"
@@ -191,13 +190,13 @@ const HandlyForm: React.FC = () => {
 
                 {/* Gender */}
                 <div>
-                  <label className="block text-sm font-medium text-indigo-800 mb-2">
+                  <label className="block text-sm font-medium text-sand-800 mb-2">
                     Gender *
                   </label>
                   <select 
                     value={formData.gender}
                     onChange={(e) => handleInputChange('gender', e.target.value)}
-                    className="w-full h-10 px-3 py-2 bg-white/50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="w-full h-10 px-3 py-2 bg-white/70 border border-sand-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sand-500 focus:border-sand-500 text-sand-900"
                     required
                   >
                     <option value="">Select gender</option>
@@ -210,13 +209,13 @@ const HandlyForm: React.FC = () => {
 
                 {/* Dominant Hand */}
                 <div>
-                  <label className="block text-sm font-medium text-indigo-800 mb-2">
+                  <label className="block text-sm font-medium text-sand-800 mb-2">
                     Dominant Hand *
                   </label>
                   <select 
                     value={formData.dominant_hand}
                     onChange={(e) => handleInputChange('dominant_hand', e.target.value)}
-                    className="w-full h-10 px-3 py-2 bg-white/50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="w-full h-10 px-3 py-2 bg-white/70 border border-sand-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sand-500 focus:border-sand-500 text-sand-900"
                     required
                   >
                     <option value="">Select dominant hand</option>
@@ -245,7 +244,7 @@ const HandlyForm: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="w-full bg-sand-700 hover:bg-sand-800 text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
                 >
                   {isLoading ? (
                     <>
@@ -265,17 +264,17 @@ const HandlyForm: React.FC = () => {
 
           {/* Reading Result Card */}
           {readingResult && (
-            <Card className="mt-12 bg-white/90 backdrop-blur-sm shadow-xl">
+            <Card className="mt-12 bg-white/95 backdrop-blur-sm shadow-2xl border-sand-200">
               <CardHeader className="text-center">
-                <CardTitle className="text-3xl text-indigo-900 flex items-center justify-center gap-2">
-                  <Sparkles className="h-6 w-6 text-indigo-600" />
+                <CardTitle className="text-3xl font-playfair text-sand-900 flex items-center justify-center gap-2">
+                  <Sparkles className="h-6 w-6 text-sand-600" />
                   Your Hand's Story
-                  <Sparkles className="h-6 w-6 text-indigo-600" />
+                  <Sparkles className="h-6 w-6 text-sand-600" />
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-indigo-800 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-sand-800 leading-relaxed whitespace-pre-wrap font-inter">
                     {readingResult}
                   </p>
                 </div>

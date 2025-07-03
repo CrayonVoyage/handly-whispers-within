@@ -1,45 +1,59 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import type { PersonalInfo } from '@/types/handly';
 
 interface PersonalInfoFormProps {
-  formData: {
-    name: string;
-    age: string;
-    gender: string;
-    dominant_hand: string;
-  };
-  onInputChange: (field: string, value: string) => void;
+  onSubmit: (info: PersonalInfo) => void;
 }
 
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ formData, onInputChange }) => {
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
+  const [formData, setFormData] = useState<PersonalInfo>({
+    name: '',
+    age: '',
+    gender: '',
+    dominant_hand: ''
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.name && formData.age && formData.gender && formData.dominant_hand) {
+      onSubmit(formData);
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-sand-800 mb-2">
-          Your Name *
+        <label className="block text-sm font-medium text-gray-800 mb-2">
+          Votre nom *
         </label>
         <Input 
           value={formData.name}
-          onChange={(e) => onInputChange('name', e.target.value)}
-          className="bg-white/70 border-sand-300 focus:border-sand-500 focus:ring-sand-500"
-          placeholder="Enter your name"
+          onChange={(e) => handleInputChange('name', e.target.value)}
+          className="bg-white/70 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+          placeholder="Entrez votre nom"
           required
         />
       </div>
 
       {/* Age */}
       <div>
-        <label className="block text-sm font-medium text-sand-800 mb-2">
-          Your Age *
+        <label className="block text-sm font-medium text-gray-800 mb-2">
+          Votre âge *
         </label>
         <Input 
           type="number"
           value={formData.age}
-          onChange={(e) => onInputChange('age', e.target.value)}
-          className="bg-white/70 border-sand-300 focus:border-sand-500 focus:ring-sand-500"
-          placeholder="Enter your age"
+          onChange={(e) => handleInputChange('age', e.target.value)}
+          className="bg-white/70 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+          placeholder="Entrez votre âge"
           min="1"
           max="150"
           required
@@ -48,40 +62,44 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ formData, onInputCh
 
       {/* Gender */}
       <div>
-        <label className="block text-sm font-medium text-sand-800 mb-2">
-          Gender *
+        <label className="block text-sm font-medium text-gray-800 mb-2">
+          Genre *
         </label>
         <select 
           value={formData.gender}
-          onChange={(e) => onInputChange('gender', e.target.value)}
-          className="w-full h-10 px-3 py-2 bg-white/70 border border-sand-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sand-500 focus:border-sand-500 text-sand-900"
+          onChange={(e) => handleInputChange('gender', e.target.value)}
+          className="w-full h-10 px-3 py-2 bg-white/70 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
           required
         >
-          <option value="">Select gender</option>
-          <option value="Female">Female</option>
-          <option value="Male">Male</option>
-          <option value="Non-binary">Non-binary</option>
-          <option value="Prefer not to say">Prefer not to say</option>
+          <option value="">Sélectionnez le genre</option>
+          <option value="Female">Femme</option>
+          <option value="Male">Homme</option>
+          <option value="Non-binary">Non-binaire</option>
+          <option value="Prefer not to say">Préfère ne pas dire</option>
         </select>
       </div>
 
       {/* Dominant Hand */}
       <div>
-        <label className="block text-sm font-medium text-sand-800 mb-2">
-          Dominant Hand *
+        <label className="block text-sm font-medium text-gray-800 mb-2">
+          Main dominante *
         </label>
         <select 
           value={formData.dominant_hand}
-          onChange={(e) => onInputChange('dominant_hand', e.target.value)}
-          className="w-full h-10 px-3 py-2 bg-white/70 border border-sand-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sand-500 focus:border-sand-500 text-sand-900"
+          onChange={(e) => handleInputChange('dominant_hand', e.target.value)}
+          className="w-full h-10 px-3 py-2 bg-white/70 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
           required
         >
-          <option value="">Select dominant hand</option>
-          <option value="Left">Left</option>
-          <option value="Right">Right</option>
+          <option value="">Sélectionnez la main dominante</option>
+          <option value="Left">Gauche</option>
+          <option value="Right">Droite</option>
         </select>
       </div>
-    </div>
+
+      <Button type="submit" className="w-full">
+        Continuer
+      </Button>
+    </form>
   );
 };
 

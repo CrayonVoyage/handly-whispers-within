@@ -5,31 +5,31 @@ import ImageUpload from './ImageUpload';
 interface ImageUploadSectionProps {
   dominantHandImage: File | null;
   nonDominantHandImage: File | null;
-  setDominantHandImage: (file: File | null) => void;
-  setNonDominantHandImage: (file: File | null) => void;
+  onDominantHandChange: (file: File | null) => void;
+  onNonDominantHandChange: (file: File | null) => void;
 }
 
 const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
   dominantHandImage,
   nonDominantHandImage,
-  setDominantHandImage,
-  setNonDominantHandImage
+  onDominantHandChange,
+  onNonDominantHandChange
 }) => {
   return (
     <div className="space-y-6">
       {/* Dominant Hand Image Upload */}
       <ImageUpload
-        label="Dominant Hand Photo"
+        label="Photo de la main dominante"
         required={true}
-        onImageChange={setDominantHandImage}
+        onImageChange={onDominantHandChange}
         image={dominantHandImage}
       />
 
       {/* Non-Dominant Hand Image Upload */}
       <ImageUpload
-        label="Non-Dominant Hand Photo (Optional)"
+        label="Photo de la main non-dominante (Optionnel)"
         required={false}
-        onImageChange={setNonDominantHandImage}
+        onImageChange={onNonDominantHandChange}
         image={nonDominantHandImage}
       />
     </div>

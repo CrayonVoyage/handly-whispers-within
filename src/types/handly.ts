@@ -1,4 +1,11 @@
 
+export interface PersonalInfo {
+  name: string;
+  age: string;
+  gender: string;
+  dominant_hand: string;
+}
+
 export interface PalmReadingRequest {
   name: string;
   age: number;

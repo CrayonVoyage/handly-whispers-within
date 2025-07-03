@@ -20,7 +20,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [compressionInfo, setCompressionInfo] = useState<CompressionResult | null>(null);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -37,7 +36,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       // Compress the image
       const result = await compressImage(file);
-      setCompressionInfo(result);
       
       // Pass compressed file to parent
       onImageChange(result.compressedFile);
@@ -66,7 +64,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleRemoveImage = () => {
     onImageChange(null);
     setPreview(null);
-    setCompressionInfo(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -143,18 +140,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           disabled={isCompressing}
         />
       </div>
-
-      {/* Compression info */}
-      {compressionInfo && (
-        <div className="text-xs text-gray-500 mt-2 p-2 bg-green-50 rounded">
-          <p>
-            Image optimisée: {formatFileSize(compressionInfo.originalSize)} → {formatFileSize(compressionInfo.compressedSize)}
-            {compressionInfo.compressionRatio > 0 && (
-              <span className="text-green-600 font-medium"> (-{compressionInfo.compressionRatio}%)</span>
-            )}
-          </p>
-        </div>
-      )}
     </div>
   );
 };

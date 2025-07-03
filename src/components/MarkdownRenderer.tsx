@@ -6,8 +6,17 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
+  // Utility function to process bold text (**text**)
+  const processBoldText = (text: string) => {
+    const parts = text.split('**');
+    return parts.map((part, index) => 
+      index % 2 === 1 ? 
+        <strong key={index} className="font-semibold text-sand-900">{part}</strong> : 
+        part
+    );
+  };
+
   const renderMarkdownContent = (content: string) => {
-    // Split content by lines and process markdown formatting
     const lines = content.split('\n');
     const processedContent = [];
     
@@ -18,19 +27,19 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
         return; // Skip empty lines
       }
       
-      // Handle headers (## Title or # Title) - remove the # characters
+      // Handle headers first (## Title or # Title) - remove the # characters
       if (trimmedLine.startsWith('##')) {
         const title = trimmedLine.replace(/^##\s*/, '');
         processedContent.push(
           <h3 key={index} className="text-xl font-playfair font-semibold text-sand-900 mt-6 mb-3 first:mt-0">
-            {title}
+            {processBoldText(title)}
           </h3>
         );
       } else if (trimmedLine.startsWith('#')) {
         const title = trimmedLine.replace(/^#\s*/, '');
         processedContent.push(
           <h2 key={index} className="text-2xl font-playfair font-bold text-sand-900 mt-8 mb-4 first:mt-0">
-            {title}
+            {processBoldText(title)}
           </h2>
         );
       }
@@ -39,29 +48,15 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
         const listItem = trimmedLine.replace(/^[-*]\s*/, '');
         processedContent.push(
           <li key={index} className="text-sand-800 mb-2 ml-4 list-disc">
-            {listItem}
+            {processBoldText(listItem)}
           </li>
         );
       }
-      // Handle bold text (**text**) - completely remove the ** characters
-      else if (trimmedLine.includes('**')) {
-        const parts = trimmedLine.split('**');
-        const formattedText = parts.map((part, partIndex) => 
-          partIndex % 2 === 1 ? 
-            <strong key={partIndex} className="font-semibold text-sand-900">{part}</strong> : 
-            part
-        );
-        processedContent.push(
-          <p key={index} className="text-sand-800 leading-relaxed mb-4">
-            {formattedText}
-          </p>
-        );
-      }
-      // Regular paragraph
+      // Handle regular paragraphs (always process bold text)
       else {
         processedContent.push(
           <p key={index} className="text-sand-800 leading-relaxed mb-4">
-            {trimmedLine}
+            {processBoldText(trimmedLine)}
           </p>
         );
       }

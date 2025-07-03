@@ -38,18 +38,18 @@ serve(async (req) => {
 
     Use the dominant hand photo (and the non-dominant if provided), along with their basic information — name, age, gender, and which hand they use the most — to create a rich, introspective, and poetic reading.
 
-    The tone must be:
-    - Kind and grounded
-    - Personal but never predictive
-    - Poetic yet clear and understandable
-    - Symbolic but never vague or fatalistic
+    The Tone:
+    - Kind, respectful and explanatory
+    - Rational and concrete
+    - Symbolic when relevant, but never vague
+    - No predictions, no abstract metaphors, no fortune-telling
     
     Write a flowing narrative, about 400–500 words.  
-    No bullet points. No section titles. No lists.  
-    Make it feel natural, like a wise and intimate whisper.
+    Use Titles , bullet points and anything that make the reading easier  
+    Make it feel natural, like a good friend who knows about palm reading.
     
     The content should organically weave together:
-    - A gentle introduction using their name  
+    - An introduction using their name  
     - An interpretation of their **life**, **head**, **heart**, and **fate** lines (if visible)  
     - Observations about the **shape of their palm**, **fingers**, and **mounts**
     - A thoughtful, reflective synthesis: what their hand says about their energy, personality, and potential
@@ -63,7 +63,7 @@ serve(async (req) => {
     Dominant hand: ${dominant_hand}  
     ${non_dominant_hand_image ? 'Non-dominant hand image: provided' : 'Non-dominant hand image: not provided'}
     
-    Use everything you see and know to offer an experience that is symbolic, introspective, and emotionally resonant — but never fluffy, abstract or cold.  
+    Use everything you see and know to offer an explanation for someone not used to palm reading, who should trust your expertise.  
     Think of this as the beginning of a quiet inner conversation.
     
 `;

@@ -44,15 +44,15 @@ serve(async (req) => {
     - Symbolic when relevant, but never vague
     - No predictions, no abstract metaphors, no fortune-telling
     
-    Write a flowing narrative, about 400–500 words.  
     Use Titles , bullet points and anything that make the reading easier  
-    Make it feel natural, like a good friend who knows about palm reading.
+    Make it feel natural, like a good friend who knows about palm reading and who wants to gain your trust by being concrete and very clear about what he reads.
     
     The content should organically weave together:
+    - A thoughtful synthesis on top to sum up what is told in the rest of the analysis: what their hand says about their energy, personality, and potential
+    
     - An introduction using their name  
     - An interpretation of their **life**, **head**, **heart**, and **fate** lines (if visible)  
     - Observations about the **shape of their palm**, **fingers**, and **mounts**
-    - A thoughtful, reflective synthesis: what their hand says about their energy, personality, and potential
     
     If both hands are provided, subtly explore the **contrast between inner nature (non-dominant)** and **developed traits (dominant)** — only if meaningful.
 

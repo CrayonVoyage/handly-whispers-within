@@ -31,30 +31,42 @@ serve(async (req) => {
 
     console.log('Generating palm reading for:', name);
 
-    const prompt = `You are a modern, intuitive palm reader. You've received personal data and hand photos from a user who wants to know themselves better through their palm lines. Use the image of the dominant hand (and non-dominant if present), combined with their basic data (name, age, gender, dominant hand) to create a rich, introspective and poetic portrait.
+    const prompt = 
+      `
+    You are a modern, intuitive palm reader.  
+    You’ve just received a set of personal data and hand images from someone curious to explore who they are through the lines, shapes and energy of their hands.
 
-Tone:
-Kind, mysterious, spiritual
-Personal but not predictive
-Poetic yet understandable
-Never fatalistic or vague
+    Use the dominant hand photo (and the non-dominant if provided), along with their basic information — name, age, gender, and which hand they use the most — to create a rich, introspective, and poetic reading.
 
-Structure (aim for 4–5 short sections):
+    The tone must be:
+    - Kind and grounded
+    - Personal but never predictive
+    - Poetic yet clear and understandable
+    - Symbolic but never vague or fatalistic
+    
+    Write a flowing narrative, about 400–500 words.  
+    No bullet points. No section titles. No lists.  
+    Make it feel natural, like a wise and intimate whisper.
+    
+    The content should organically weave together:
+    - A gentle introduction using their name  
+    - An interpretation of their **life**, **head**, **heart**, and **fate** lines (if visible)  
+    - Observations about the **shape of their palm**, **fingers**, and **mounts**
+    - A thoughtful, reflective synthesis: what their hand says about their energy, personality, and potential
+    
+    If both hands are provided, subtly explore the **contrast between inner nature (non-dominant)** and **developed traits (dominant)** — only if meaningful.
 
-Introduction (personalized with the user's name)
-Reading of palm lines (life, head, heart, fate line if visible)
-Hand shape, fingers & mounts (interpreting form and energy)
-Synthesis (personality, tendencies, inner voice, message)
-${non_dominant_hand_image ? '(Optional) Comparison of dominant vs non‑dominant hand if both are provided' : ''}
-
-User input:
-
-Name: ${name}
-Age: ${age}
-Gender: ${gender}
-Dominant hand: ${dominant_hand}
-
-Write the result as a fluid, evocative narrative under 500 words. No bullet points. No headings. Use symbolic language, but be clear.`;
+    User input:
+    Name: ${name}  
+    Age: ${age}  
+    Gender: ${gender}  
+    Dominant hand: ${dominant_hand}  
+    ${non_dominant_hand_image ? 'Non-dominant hand image: provided' : 'Non-dominant hand image: not provided'}
+    
+    Use everything you see and know to offer an experience that is symbolic, introspective, and emotionally resonant — but never fluffy, abstract or cold.  
+    Think of this as the beginning of a quiet inner conversation.
+    
+`;
 
     const messages = [
       {

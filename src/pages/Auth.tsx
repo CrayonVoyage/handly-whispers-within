@@ -64,16 +64,16 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-pink-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border-indigo-200">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <Hand className="h-12 w-12 text-indigo-600" />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-2xl font-bold text-indigo-900 font-playfair">
             {isLogin ? 'Connexion' : 'Inscription'}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-indigo-700">
             {isLogin 
               ? 'Connectez-vous à votre compte Handly' 
               : 'Créez votre compte Handly'
@@ -84,7 +84,7 @@ const Auth = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
+                <label htmlFor="fullName" className="text-sm font-medium text-indigo-800">
                   Nom complet
                 </label>
                 <Input
@@ -94,12 +94,13 @@ const Auth = () => {
                   onChange={(e) => setFullName(e.target.value)}
                   required={!isLogin}
                   placeholder="Votre nom complet"
+                  className="bg-white/70 border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500"
                 />
               </div>
             )}
             
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="text-sm font-medium text-indigo-800">
                 Email
               </label>
               <Input
@@ -109,11 +110,12 @@ const Auth = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="votre@email.com"
+                className="bg-white/70 border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="text-sm font-medium text-indigo-800">
                 Mot de passe
               </label>
               <div className="relative">
@@ -124,10 +126,11 @@ const Auth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
+                  className="bg-white/70 border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500"
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -135,7 +138,11 @@ const Auth = () => {
               </div>
             </div>
             
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white" 
+              disabled={loading}
+            >
               {loading ? 'Chargement...' : (isLogin ? 'Se connecter' : 'S\'inscrire')}
             </Button>
           </form>
@@ -144,7 +151,7 @@ const Auth = () => {
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-indigo-600 hover:text-indigo-800"
+              className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
             >
               {isLogin 
                 ? 'Pas encore de compte ? Inscrivez-vous' 

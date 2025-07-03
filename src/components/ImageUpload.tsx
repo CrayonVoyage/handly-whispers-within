@@ -45,13 +45,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-indigo-800 font-inter">
+      <label className="block text-sm font-medium text-indigo-800">
         {label} {required && <span className="text-indigo-600">*</span>}
       </label>
       
       <div 
         onClick={handleClick}
-        className="relative border-2 border-dashed border-sand-300 rounded-lg p-6 cursor-pointer hover:border-sand-400 transition-colors bg-sand-50/50"
+        className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-gray-400 transition-colors bg-gray-50/50"
       >
         {preview ? (
           <div className="relative">
@@ -75,12 +75,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         ) : (
           <div className="text-center">
-            <Hand className="mx-auto h-12 w-12 text-sand-400" />
+            <Hand className="mx-auto h-12 w-12 text-gray-400" />
             <div className="mt-4">
-              <p className="text-sm text-sand-600 font-inter">
+              <p className="text-sm text-gray-600">
                 Click to upload your hand photo
               </p>
-              <p className="text-xs text-sand-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1">
                 PNG, JPG up to 10MB
               </p>
             </div>

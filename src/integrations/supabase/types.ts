@@ -9,7 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      handly_users: {
+        Row: {
+          age: number
+          created_at: string
+          dominant_hand: Database["public"]["Enums"]["hand_type"]
+          dominant_hand_image_url: string | null
+          gender: Database["public"]["Enums"]["gender_type"]
+          id: string
+          is_premium: boolean
+          name: string
+          non_dominant_hand_image_url: string | null
+          reading_result: string | null
+          updated_at: string
+        }
+        Insert: {
+          age: number
+          created_at?: string
+          dominant_hand: Database["public"]["Enums"]["hand_type"]
+          dominant_hand_image_url?: string | null
+          gender: Database["public"]["Enums"]["gender_type"]
+          id?: string
+          is_premium?: boolean
+          name: string
+          non_dominant_hand_image_url?: string | null
+          reading_result?: string | null
+          updated_at?: string
+        }
+        Update: {
+          age?: number
+          created_at?: string
+          dominant_hand?: Database["public"]["Enums"]["hand_type"]
+          dominant_hand_image_url?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"]
+          id?: string
+          is_premium?: boolean
+          name?: string
+          non_dominant_hand_image_url?: string | null
+          reading_result?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +59,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      gender_type: "Female" | "Male" | "Non-binary" | "Prefer not to say"
+      hand_type: "Left" | "Right"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +175,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      gender_type: ["Female", "Male", "Non-binary", "Prefer not to say"],
+      hand_type: ["Left", "Right"],
+    },
   },
 } as const

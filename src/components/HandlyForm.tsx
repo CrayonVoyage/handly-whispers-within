@@ -4,10 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
+import ImageUpload from './ImageUpload';
+import { supabase } from '@/integrations/supabase/client';
+import { generatePalmReading } from '@/services/palmReading';
+import { useToast } from '@/hooks/use-toast';
 
 const HandlyForm: React.FC = () => {
   console.log('HandlyForm component rendering...');
   
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -15,6 +20,8 @@ const HandlyForm: React.FC = () => {
     dominant_hand: '',
   });
   
+  const [dominantHandImage, setDominantHandImage] = useState<File | null>(null);
+  const [nonDominantHandImage, setNonDominantHandImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [readingResult, setReadingResult] = useState<string>('');
 
@@ -25,16 +32,107 @@ const HandlyForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const uploadImage = async (file: File, fileName: string): Promise<string | null> => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('hand-images')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        console.error('Upload error:', error);
+        return null;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('hand-images')
+        .getPublicUrl(data.path);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted with data:', formData);
+    
+    if (!dominantHandImage) {
+      toast({
+        title: "Error",
+        description: "Please upload your dominant hand image",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
-    // Mock reading for now
-    setTimeout(() => {
-      setReadingResult(`Dear ${formData.name || 'friend'}, your hand reveals a story of resilience and creativity. The lines speak of someone who values authentic connections and has the wisdom to trust their intuition.`);
+    try {
+      // Upload images to Supabase Storage
+      const timestamp = Date.now();
+      const dominantHandFileName = `${timestamp}_dominant_${dominantHandImage.name}`;
+      const dominantHandUrl = await uploadImage(dominantHandImage, dominantHandFileName);
+
+      if (!dominantHandUrl) {
+        throw new Error('Failed to upload dominant hand image');
+      }
+
+      let nonDominantHandUrl = null;
+      if (nonDominantHandImage) {
+        const nonDominantHandFileName = `${timestamp}_non_dominant_${nonDominantHandImage.name}`;
+        nonDominantHandUrl = await uploadImage(nonDominantHandImage, nonDominantHandFileName);
+      }
+
+      // Generate palm reading
+      const reading = await generatePalmReading({
+        name: formData.name,
+        age: parseInt(formData.age),
+        gender: formData.gender as any,
+        dominant_hand: formData.dominant_hand as any,
+        dominant_hand_image: dominantHandUrl,
+        non_dominant_hand_image: nonDominantHandUrl
+      });
+
+      // Save to database
+      const { data, error } = await supabase
+        .from('handly_users')
+        .insert({
+          name: formData.name,
+          age: parseInt(formData.age),
+          gender: formData.gender as any,
+          dominant_hand: formData.dominant_hand as any,
+          dominant_hand_image_url: dominantHandUrl,
+          non_dominant_hand_image_url: nonDominantHandUrl,
+          reading_result: reading
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      setReadingResult(reading);
+      toast({
+        title: "Success!",
+        description: "Your palm reading has been generated and saved.",
+      });
+
+    } catch (error) {
+      console.error('Error processing form:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process your palm reading. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   try {
@@ -85,6 +183,8 @@ const HandlyForm: React.FC = () => {
                     onChange={(e) => handleInputChange('age', e.target.value)}
                     className="bg-white/50"
                     placeholder="Enter your age"
+                    min="1"
+                    max="150"
                     required
                   />
                 </div>
@@ -124,6 +224,22 @@ const HandlyForm: React.FC = () => {
                     <option value="Right">Right</option>
                   </select>
                 </div>
+
+                {/* Dominant Hand Image Upload */}
+                <ImageUpload
+                  label="Dominant Hand Photo"
+                  required={true}
+                  onImageChange={setDominantHandImage}
+                  image={dominantHandImage}
+                />
+
+                {/* Non-Dominant Hand Image Upload */}
+                <ImageUpload
+                  label="Non-Dominant Hand Photo (Optional)"
+                  required={false}
+                  onImageChange={setNonDominantHandImage}
+                  image={nonDominantHandImage}
+                />
 
                 {/* Submit Button */}
                 <Button

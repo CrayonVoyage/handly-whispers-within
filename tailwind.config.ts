@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,36 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Handly color palette
+				sand: {
+					50: '#faf8f5',
+					100: '#f5f1ea',
+					200: '#e8dfd0',
+					300: '#d9c7a8',
+					400: '#c9ad84',
+					500: '#b8935f',
+					600: '#a67c4a',
+					700: '#8a633c',
+					800: '#6f5032',
+					900: '#5a412a'
+				},
+				indigo: {
+					50: '#eef2ff',
+					100: '#e0e7ff',
+					200: '#c7d2fe',
+					300: '#a5b4fc',
+					400: '#818cf8',
+					500: '#6366f1',
+					600: '#4f46e5',
+					700: '#4338ca',
+					800: '#3730a3',
+					900: '#312b7f'
 				}
+			},
+			fontFamily: {
+				'playfair': ['Playfair Display', 'serif'],
+				'inter': ['Inter', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

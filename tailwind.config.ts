@@ -63,7 +63,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Handly color palette
+				// Handly warm color palette
+				cream: {
+					50: '#fefcf8',
+					100: '#fdf8f0',
+					200: '#faf0e0',
+					300: '#f5e4c8',
+					400: '#efd4a7',
+					500: '#e8c087',
+					600: '#dfa86a',
+					700: '#d18e4f',
+					800: '#b87441',
+					900: '#9b6137'
+				},
 				sand: {
 					50: '#faf8f5',
 					100: '#f5f1ea',
@@ -76,22 +88,48 @@ export default {
 					800: '#6f5032',
 					900: '#5a412a'
 				},
-				indigo: {
-					50: '#eef2ff',
-					100: '#e0e7ff',
-					200: '#c7d2fe',
-					300: '#a5b4fc',
-					400: '#818cf8',
-					500: '#6366f1',
-					600: '#4f46e5',
-					700: '#4338ca',
-					800: '#3730a3',
-					900: '#312b7f'
+				navy: {
+					50: '#f0f1f5',
+					100: '#e1e4ea',
+					200: '#c4c9d5',
+					300: '#9ea6ba',
+					400: '#757f9a',
+					500: '#565f7e',
+					600: '#484f69',
+					700: '#3d4156',
+					800: '#343749',
+					900: '#2d2f3f'
+				},
+				violet: {
+					50: '#f5f3ff',
+					100: '#ede9fe',
+					200: '#ddd6fe',
+					300: '#c4b5fd',
+					400: '#a78bfa',
+					500: '#8b5cf6',
+					600: '#7c3aed',
+					700: '#6d28d9',
+					800: '#5b21b6',
+					900: '#4c1d95'
+				},
+				lavender: {
+					50: '#faf7ff',
+					100: '#f3ebff',
+					200: '#e9daff',
+					300: '#d6bbff',
+					400: '#be90ff',
+					500: '#a855f7',
+					600: '#9333ea',
+					700: '#7e22ce',
+					800: '#6b21a8',
+					900: '#581c87'
 				}
 			},
 			fontFamily: {
 				'playfair': ['Playfair Display', 'serif'],
 				'inter': ['Inter', 'sans-serif'],
+				'serif': ['Playfair Display', 'serif'],
+				'sans': ['Inter', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

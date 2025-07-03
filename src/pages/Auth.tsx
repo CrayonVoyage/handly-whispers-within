@@ -64,27 +64,27 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border-indigo-200">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <Hand className="h-12 w-12 text-indigo-600" />
+    <div className="min-h-screen bg-cream-50 flex items-center justify-center p-4 py-12">
+      <Card className="w-full max-w-md bg-card shadow-lg border-sand-200 rounded-2xl">
+        <CardHeader className="text-center pb-6">
+          <div className="flex justify-center mb-6">
+            <Hand className="h-16 w-16 text-violet-600" />
           </div>
-          <CardTitle className="text-2xl font-bold text-indigo-900 font-playfair">
+          <CardTitle className="text-3xl font-playfair font-medium text-navy-800">
             {isLogin ? 'Connexion' : 'Inscription'}
           </CardTitle>
-          <CardDescription className="text-indigo-700">
+          <CardDescription className="text-navy-600 text-base mt-2">
             {isLogin 
               ? 'Connectez-vous à votre compte Handly' 
               : 'Créez votre compte Handly'
             }
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="px-8 pb-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
-              <div className="space-y-2">
-                <label htmlFor="fullName" className="text-sm font-medium text-indigo-800">
+              <div className="space-y-3">
+                <label htmlFor="fullName" className="text-base font-medium text-navy-700">
                   Nom complet
                 </label>
                 <Input
@@ -94,13 +94,13 @@ const Auth = () => {
                   onChange={(e) => setFullName(e.target.value)}
                   required={!isLogin}
                   placeholder="Votre nom complet"
-                  className="bg-white/70 border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500"
+                  className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
                 />
               </div>
             )}
             
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-indigo-800">
+            <div className="space-y-3">
+              <label htmlFor="email" className="text-base font-medium text-navy-700">
                 Email
               </label>
               <Input
@@ -110,12 +110,12 @@ const Auth = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="votre@email.com"
-                className="bg-white/70 border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500"
+                className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
               />
             </div>
             
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-indigo-800">
+            <div className="space-y-3">
+              <label htmlFor="password" className="text-base font-medium text-navy-700">
                 Mot de passe
               </label>
               <div className="relative">
@@ -126,32 +126,32 @@ const Auth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="bg-white/70 border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500"
+                  className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-navy-500"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
             </div>
             
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white" 
+              className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-4 text-base font-medium shadow-sm hover:shadow-md transition-all" 
               disabled={loading}
             >
               {loading ? 'Chargement...' : (isLogin ? 'Se connecter' : 'S\'inscrire')}
             </Button>
           </form>
           
-          <div className="mt-4 text-center">
+          <div className="mt-8 text-center">
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+              className="text-base text-violet-600 hover:text-violet-800 font-medium"
             >
               {isLogin 
                 ? 'Pas encore de compte ? Inscrivez-vous' 

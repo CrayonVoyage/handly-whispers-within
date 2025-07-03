@@ -20,20 +20,22 @@ const PalmReadingResult: React.FC<PalmReadingResultProps> = ({
   if (!result) return null;
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-indigo-200">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-indigo-900 flex items-center justify-center gap-2">
-            <Sparkles className="h-6 w-6 text-indigo-600" />
+    <div className="space-y-8">
+      <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
+        <CardHeader className="text-center pb-6">
+          <CardTitle className="text-3xl font-playfair text-navy-800 flex items-center justify-center gap-3">
+            <Sparkles className="h-7 w-7 text-violet-600" />
             Votre Lecture de Main
-            <Sparkles className="h-6 w-6 text-indigo-600" />
+            <Sparkles className="h-7 w-7 text-violet-600" />
           </CardTitle>
-          <p className="text-indigo-700">
+          <p className="text-lg text-navy-600 font-playfair italic mt-2">
             Lecture personnalisée pour {personalInfo.name}
           </p>
         </CardHeader>
-        <CardContent>
-          <MarkdownRenderer content={result} />
+        <CardContent className="px-8 pb-8">
+          <div className="bg-cream-50/50 rounded-xl p-6">
+            <MarkdownRenderer content={result} />
+          </div>
         </CardContent>
       </Card>
 
@@ -41,9 +43,9 @@ const PalmReadingResult: React.FC<PalmReadingResultProps> = ({
         <Button 
           onClick={onReset}
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-3 border-violet-300 text-violet-700 hover:bg-violet-50 rounded-xl px-8 py-3 text-base shadow-sm hover:shadow-md transition-all"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-5 w-5" />
           Nouvelle lecture
         </Button>
       </div>

@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
-import ImageUpload from './ImageUpload';
 import { supabase } from '@/integrations/supabase/client';
 import { generatePalmReading } from '@/services/palmReading';
 import { useToast } from '@/hooks/use-toast';
+import PersonalInfoForm from './PersonalInfoForm';
+import ImageUploadSection from './ImageUploadSection';
+import PalmReadingResult from './PalmReadingResult';
 
 const HandlyForm: React.FC = () => {
   console.log('HandlyForm component rendering...');
@@ -135,70 +136,6 @@ const HandlyForm: React.FC = () => {
     }
   };
 
-  const renderMarkdownContent = (content: string) => {
-    // Split content by lines and process markdown formatting
-    const lines = content.split('\n');
-    const processedContent = [];
-    
-    lines.forEach((line, index) => {
-      const trimmedLine = line.trim();
-      
-      if (!trimmedLine) {
-        return; // Skip empty lines
-      }
-      
-      // Handle headers (## Title or # Title) - remove the # characters
-      if (trimmedLine.startsWith('##')) {
-        const title = trimmedLine.replace(/^##\s*/, '');
-        processedContent.push(
-          <h3 key={index} className="text-xl font-playfair font-semibold text-sand-900 mt-6 mb-3 first:mt-0">
-            {title}
-          </h3>
-        );
-      } else if (trimmedLine.startsWith('#')) {
-        const title = trimmedLine.replace(/^#\s*/, '');
-        processedContent.push(
-          <h2 key={index} className="text-2xl font-playfair font-bold text-sand-900 mt-8 mb-4 first:mt-0">
-            {title}
-          </h2>
-        );
-      }
-      // Handle list items (- Item or * Item)
-      else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
-        const listItem = trimmedLine.replace(/^[-*]\s*/, '');
-        processedContent.push(
-          <li key={index} className="text-sand-800 mb-2 ml-4 list-disc">
-            {listItem}
-          </li>
-        );
-      }
-      // Handle bold text (**text**) - completely remove the ** characters
-      else if (trimmedLine.includes('**')) {
-        const parts = trimmedLine.split('**');
-        const formattedText = parts.map((part, partIndex) => 
-          partIndex % 2 === 1 ? 
-            <strong key={partIndex} className="font-semibold text-sand-900">{part}</strong> : 
-            part
-        );
-        processedContent.push(
-          <p key={index} className="text-sand-800 leading-relaxed mb-4">
-            {formattedText}
-          </p>
-        );
-      }
-      // Regular paragraph
-      else {
-        processedContent.push(
-          <p key={index} className="text-sand-800 leading-relaxed mb-4">
-            {trimmedLine}
-          </p>
-        );
-      }
-    });
-    
-    return processedContent;
-  };
-
   try {
     return (
       <div className="min-h-screen bg-sand-50 py-12 px-4">
@@ -222,87 +159,16 @@ const HandlyForm: React.FC = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name */}
-                <div>
-                  <label className="block text-sm font-medium text-sand-800 mb-2">
-                    Your Name *
-                  </label>
-                  <Input 
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="bg-white/70 border-sand-300 focus:border-sand-500 focus:ring-sand-500"
-                    placeholder="Enter your name"
-                    required
-                  />
-                </div>
-
-                {/* Age */}
-                <div>
-                  <label className="block text-sm font-medium text-sand-800 mb-2">
-                    Your Age *
-                  </label>
-                  <Input 
-                    type="number"
-                    value={formData.age}
-                    onChange={(e) => handleInputChange('age', e.target.value)}
-                    className="bg-white/70 border-sand-300 focus:border-sand-500 focus:ring-sand-500"
-                    placeholder="Enter your age"
-                    min="1"
-                    max="150"
-                    required
-                  />
-                </div>
-
-                {/* Gender */}
-                <div>
-                  <label className="block text-sm font-medium text-sand-800 mb-2">
-                    Gender *
-                  </label>
-                  <select 
-                    value={formData.gender}
-                    onChange={(e) => handleInputChange('gender', e.target.value)}
-                    className="w-full h-10 px-3 py-2 bg-white/70 border border-sand-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sand-500 focus:border-sand-500 text-sand-900"
-                    required
-                  >
-                    <option value="">Select gender</option>
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                    <option value="Non-binary">Non-binary</option>
-                    <option value="Prefer not to say">Prefer not to say</option>
-                  </select>
-                </div>
-
-                {/* Dominant Hand */}
-                <div>
-                  <label className="block text-sm font-medium text-sand-800 mb-2">
-                    Dominant Hand *
-                  </label>
-                  <select 
-                    value={formData.dominant_hand}
-                    onChange={(e) => handleInputChange('dominant_hand', e.target.value)}
-                    className="w-full h-10 px-3 py-2 bg-white/70 border border-sand-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sand-500 focus:border-sand-500 text-sand-900"
-                    required
-                  >
-                    <option value="">Select dominant hand</option>
-                    <option value="Left">Left</option>
-                    <option value="Right">Right</option>
-                  </select>
-                </div>
-
-                {/* Dominant Hand Image Upload */}
-                <ImageUpload
-                  label="Dominant Hand Photo"
-                  required={true}
-                  onImageChange={setDominantHandImage}
-                  image={dominantHandImage}
+                <PersonalInfoForm 
+                  formData={formData}
+                  onInputChange={handleInputChange}
                 />
 
-                {/* Non-Dominant Hand Image Upload */}
-                <ImageUpload
-                  label="Non-Dominant Hand Photo (Optional)"
-                  required={false}
-                  onImageChange={setNonDominantHandImage}
-                  image={nonDominantHandImage}
+                <ImageUploadSection
+                  dominantHandImage={dominantHandImage}
+                  nonDominantHandImage={nonDominantHandImage}
+                  setDominantHandImage={setDominantHandImage}
+                  setNonDominantHandImage={setNonDominantHandImage}
                 />
 
                 {/* Submit Button */}
@@ -328,24 +194,7 @@ const HandlyForm: React.FC = () => {
           </Card>
 
           {/* Reading Result Card */}
-          {readingResult && (
-            <Card className="mt-12 bg-white/95 backdrop-blur-sm shadow-2xl border-sand-200">
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl font-playfair text-sand-900 flex items-center justify-center gap-2">
-                  <Sparkles className="h-6 w-6 text-sand-600" />
-                  Your Hand's Story
-                  <Sparkles className="h-6 w-6 text-sand-600" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="prose prose-lg max-w-none">
-                  <div className="font-inter">
-                    {renderMarkdownContent(readingResult)}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          <PalmReadingResult readingResult={readingResult} />
         </div>
       </div>
     );

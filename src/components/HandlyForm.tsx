@@ -18,7 +18,6 @@ const HandlyForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const [currentStep, setCurrentStep] = useState(1);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: '',
     age: '',
@@ -53,13 +52,22 @@ const HandlyForm = () => {
     return urlData.publicUrl;
   };
 
-  const handlePersonalInfoSubmit = (info: PersonalInfo) => {
-    console.log('Personal info submitted:', info);
-    setPersonalInfo(info);
-    setCurrentStep(2);
+  const handleInputChange = (field: string, value: string) => {
+    setPersonalInfo(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleImagesSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!personalInfo.name || !personalInfo.age || !personalInfo.gender || !personalInfo.dominant_hand) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all personal information fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (!dominantHandImage || !nonDominantHandImage) {
       toast({
         title: "Missing images",
@@ -116,8 +124,6 @@ const HandlyForm = () => {
         console.error('Database error:', dbError);
         throw dbError;
       }
-
-      setCurrentStep(3);
       
     } catch (error) {
       console.error('Error processing images:', error);
@@ -132,7 +138,6 @@ const HandlyForm = () => {
   };
 
   const resetForm = () => {
-    setCurrentStep(1);
     setPersonalInfo({ name: '', age: '', gender: '', dominant_hand: '' });
     setDominantHandImage(null);
     setNonDominantHandImage(null);
@@ -141,20 +146,20 @@ const HandlyForm = () => {
 
   return (
     <div className="min-h-screen bg-cream-50 p-4 py-12">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto space-y-12">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center">
           <h1 className="text-5xl font-playfair font-medium text-navy-800 mb-4">
             Handly
           </h1>
-          <p className="text-xl font-playfair italic text-navy-600 mb-8">
+          <p className="text-xl font-playfair italic text-navy-600">
             "There's a map in your hand."
           </p>
         </div>
 
         {/* Auth Notice */}
         {!user && (
-          <Card className="mb-12 border-violet-200 bg-lavender-50/50 shadow-sm">
+          <Card className="border-violet-200 bg-lavender-50/50 shadow-sm">
             <CardContent className="flex flex-col sm:flex-row items-center justify-between p-8 gap-4">
               <div className="text-center sm:text-left">
                 <h3 className="font-playfair font-medium text-lg text-navy-800 mb-2">Save your readings</h3>
@@ -168,79 +173,112 @@ const HandlyForm = () => {
           </Card>
         )}
 
-        {/* Progress Indicator */}
-        <div className="flex justify-center mb-12">
-          <div className="flex items-center space-x-6">
-            {[1, 2, 3].map((step) => (
-              <div key={step} className="flex items-center">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-medium text-lg font-playfair transition-all ${
-                  step <= currentStep 
-                    ? 'bg-violet-600 text-white shadow-md' 
-                    : 'bg-sand-200 text-navy-500'
-                }`}>
-                  {step}
+        {/* Main Form */}
+        <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-2xl font-playfair text-navy-800">Your Information</CardTitle>
+            <CardDescription className="text-navy-600 text-base mt-2">
+              Tell us about yourself for a personalized reading
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Personal Information */}
+              <div className="space-y-8">
+                {/* Name */}
+                <div>
+                  <label className="block text-base font-medium text-navy-700 mb-3">
+                    Your name *
+                  </label>
+                  <input 
+                    value={personalInfo.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    className="w-full bg-white border border-sand-300 focus:border-violet-400 focus:ring-violet-400 focus:ring-2 focus:ring-opacity-20 rounded-xl py-3 px-4 text-base outline-none transition-all"
+                    placeholder="Enter your name"
+                    required
+                  />
                 </div>
-                {step < 3 && (
-                  <div className={`w-20 h-1 mx-3 rounded-full transition-all ${
-                    step < currentStep ? 'bg-violet-600' : 'bg-sand-200'
-                  }`} />
-                )}
+
+                {/* Age */}
+                <div>
+                  <label className="block text-base font-medium text-navy-700 mb-3">
+                    Your age *
+                  </label>
+                  <input 
+                    type="number"
+                    value={personalInfo.age}
+                    onChange={(e) => handleInputChange('age', e.target.value)}
+                    className="w-full bg-white border border-sand-300 focus:border-violet-400 focus:ring-violet-400 focus:ring-2 focus:ring-opacity-20 rounded-xl py-3 px-4 text-base outline-none transition-all"
+                    placeholder="Enter your age"
+                    min="1"
+                    max="150"
+                    required
+                  />
+                </div>
+
+                {/* Gender */}
+                <div>
+                  <label className="block text-base font-medium text-navy-700 mb-3">
+                    Gender *
+                  </label>
+                  <select 
+                    value={personalInfo.gender}
+                    onChange={(e) => handleInputChange('gender', e.target.value)}
+                    className="w-full py-3 px-4 bg-white border border-sand-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-20 focus:border-violet-400 text-navy-700 text-base transition-all"
+                    required
+                  >
+                    <option value="">Select your gender</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Non-binary">Non-binary</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
+                </div>
+
+                {/* Dominant Hand */}
+                <div>
+                  <label className="block text-base font-medium text-navy-700 mb-3">
+                    Dominant hand *
+                  </label>
+                  <select 
+                    value={personalInfo.dominant_hand}
+                    onChange={(e) => handleInputChange('dominant_hand', e.target.value)}
+                    className="w-full py-3 px-4 bg-white border border-sand-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-20 focus:border-violet-400 text-navy-700 text-base transition-all"
+                    required
+                  >
+                    <option value="">Select your dominant hand</option>
+                    <option value="Left">Left</option>
+                    <option value="Right">Right</option>
+                  </select>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Step Content */}
-        {currentStep === 1 && (
-          <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-playfair text-navy-800">Step 1: Personal Information</CardTitle>
-              <CardDescription className="text-navy-600 text-base mt-2">
-                This information helps us personalize your reading
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-8 pb-8">
-              <PersonalInfoForm onSubmit={handlePersonalInfoSubmit} />
-            </CardContent>
-          </Card>
-        )}
-
-        {currentStep === 2 && (
-          <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-playfair text-navy-800">Step 2: Hand Photos</CardTitle>
-              <CardDescription className="text-navy-600 text-base mt-2">
-                Take clear photos of both hands for an accurate reading
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-8 pb-8">
-              <ImageUploadSection
-                dominantHandImage={dominantHandImage}
-                nonDominantHandImage={nonDominantHandImage}
-                onDominantHandChange={setDominantHandImage}
-                onNonDominantHandChange={setNonDominantHandImage}
-              />
-              <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setCurrentStep(1)}
-                  className="flex-1 border-sand-300 text-navy-700 hover:bg-sand-100 rounded-xl py-3"
-                >
-                  Back
-                </Button>
-                <Button 
-                  onClick={handleImagesSubmit}
-                  disabled={isLoading || !dominantHandImage || !nonDominantHandImage}
-                  className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-3 shadow-sm hover:shadow-md transition-all"
-                >
-                  {isLoading ? 'Analyzing...' : 'Generate my reading'}
-                </Button>
+              {/* Image Upload Section */}
+              <div className="pt-4">
+                <h3 className="text-xl font-playfair font-medium text-navy-800 mb-6 text-center">Hand Photos</h3>
+                <p className="text-navy-600 text-center mb-8">Take clear photos of both hands for an accurate reading</p>
+                <ImageUploadSection
+                  dominantHandImage={dominantHandImage}
+                  nonDominantHandImage={nonDominantHandImage}
+                  onDominantHandChange={setDominantHandImage}
+                  onNonDominantHandChange={setNonDominantHandImage}
+                />
               </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {currentStep === 3 && (
+              {/* Submit Button */}
+              <Button 
+                type="submit"
+                disabled={isLoading || !personalInfo.name || !personalInfo.age || !personalInfo.gender || !personalInfo.dominant_hand || !dominantHandImage || !nonDominantHandImage}
+                className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-4 text-base font-medium shadow-sm hover:shadow-md transition-all"
+              >
+                {isLoading ? 'Reading your palm...' : 'Read my hand'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Palm Reading Result */}
+        {palmReading && (
           <PalmReadingResult 
             result={palmReading}
             personalInfo={personalInfo}

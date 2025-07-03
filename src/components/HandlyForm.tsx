@@ -147,7 +147,7 @@ const HandlyForm: React.FC = () => {
         return; // Skip empty lines
       }
       
-      // Handle headers (## Title or # Title)
+      // Handle headers (## Title or # Title) - remove the # characters
       if (trimmedLine.startsWith('##')) {
         const title = trimmedLine.replace(/^##\s*/, '');
         processedContent.push(
@@ -172,7 +172,7 @@ const HandlyForm: React.FC = () => {
           </li>
         );
       }
-      // Handle bold text (**text**)
+      // Handle bold text (**text**) - completely remove the ** characters
       else if (trimmedLine.includes('**')) {
         const parts = trimmedLine.split('**');
         const formattedText = parts.map((part, partIndex) => 

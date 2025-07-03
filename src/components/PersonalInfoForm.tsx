@@ -32,13 +32,13 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
       {/* Name */}
       <div>
         <label className="block text-base font-medium text-navy-700 mb-3">
-          Votre nom *
+          Your name *
         </label>
         <Input 
           value={formData.name}
           onChange={(e) => handleInputChange('name', e.target.value)}
           className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
-          placeholder="Entrez votre nom"
+          placeholder="Enter your name"
           required
         />
       </div>
@@ -46,14 +46,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
       {/* Age */}
       <div>
         <label className="block text-base font-medium text-navy-700 mb-3">
-          Votre âge *
+          Your age *
         </label>
         <Input 
           type="number"
           value={formData.age}
           onChange={(e) => handleInputChange('age', e.target.value)}
           className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
-          placeholder="Entrez votre âge"
+          placeholder="Enter your age"
           min="1"
           max="150"
           required
@@ -63,7 +63,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
       {/* Gender */}
       <div>
         <label className="block text-base font-medium text-navy-700 mb-3">
-          Genre *
+          Gender *
         </label>
         <select 
           value={formData.gender}
@@ -71,18 +71,18 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
           className="w-full py-3 px-4 bg-white border border-sand-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 text-navy-700 text-base"
           required
         >
-          <option value="">Sélectionnez votre genre</option>
-          <option value="Female">Femme</option>
-          <option value="Male">Homme</option>
-          <option value="Non-binary">Non-binaire</option>
-          <option value="Prefer not to say">Préfère ne pas dire</option>
+          <option value="">Select your gender</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Non-binary">Non-binary</option>
+          <option value="Prefer not to say">Prefer not to say</option>
         </select>
       </div>
 
       {/* Dominant Hand */}
       <div>
         <label className="block text-base font-medium text-navy-700 mb-3">
-          Main dominante *
+          Dominant hand *
         </label>
         <select 
           value={formData.dominant_hand}
@@ -90,9 +90,9 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
           className="w-full py-3 px-4 bg-white border border-sand-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 text-navy-700 text-base"
           required
         >
-          <option value="">Sélectionnez votre main dominante</option>
-          <option value="Left">Gauche</option>
-          <option value="Right">Droite</option>
+          <option value="">Select your dominant hand</option>
+          <option value="Left">Left</option>
+          <option value="Right">Right</option>
         </select>
       </div>
 
@@ -100,7 +100,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onSubmit }) => {
         type="submit" 
         className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-4 text-base font-medium shadow-sm hover:shadow-md transition-all"
       >
-        Continuer
+        Continue
       </Button>
     </form>
   );

@@ -7,7 +7,7 @@ import ImageUploadSection from './ImageUploadSection';
 import PalmReadingResult from './PalmReadingResult';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Hand, LogIn } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { generatePalmReading } from '@/services/palmReading';
@@ -62,8 +62,8 @@ const HandlyForm = () => {
   const handleImagesSubmit = async () => {
     if (!dominantHandImage || !nonDominantHandImage) {
       toast({
-        title: "Images manquantes",
-        description: "Veuillez télécharger les deux photos de vos mains",
+        title: "Missing images",
+        description: "Please upload both hand photos",
         variant: "destructive"
       });
       return;
@@ -122,8 +122,8 @@ const HandlyForm = () => {
     } catch (error) {
       console.error('Error processing images:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du traitement de vos images",
+        title: "Error",
+        description: "An error occurred while processing your images",
         variant: "destructive"
       });
     } finally {
@@ -144,17 +144,11 @@ const HandlyForm = () => {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <Hand className="h-20 w-20 text-violet-600" />
-          </div>
           <h1 className="text-5xl font-playfair font-medium text-navy-800 mb-4">
             Handly
           </h1>
-          <p className="text-xl font-playfair italic text-navy-600 mb-2">
+          <p className="text-xl font-playfair italic text-navy-600 mb-8">
             "There's a map in your hand."
-          </p>
-          <p className="text-lg text-navy-600 font-inter">
-            Découvrez les secrets cachés dans vos lignes de main
           </p>
         </div>
 
@@ -163,12 +157,12 @@ const HandlyForm = () => {
           <Card className="mb-12 border-violet-200 bg-lavender-50/50 shadow-sm">
             <CardContent className="flex flex-col sm:flex-row items-center justify-between p-8 gap-4">
               <div className="text-center sm:text-left">
-                <h3 className="font-playfair font-medium text-lg text-navy-800 mb-2">Sauvegardez vos lectures</h3>
-                <p className="text-navy-600">Connectez-vous pour sauvegarder et retrouver vos lectures de main</p>
+                <h3 className="font-playfair font-medium text-lg text-navy-800 mb-2">Save your readings</h3>
+                <p className="text-navy-600">Sign in to save and access your palm readings</p>
               </div>
               <Button onClick={() => navigate('/auth')} className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-xl shadow-sm hover:shadow-md transition-all">
                 <LogIn className="h-4 w-4 mr-2" />
-                Se connecter
+                Sign In
               </Button>
             </CardContent>
           </Card>
@@ -200,9 +194,9 @@ const HandlyForm = () => {
         {currentStep === 1 && (
           <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-playfair text-navy-800">Étape 1: Informations Personnelles</CardTitle>
+              <CardTitle className="text-2xl font-playfair text-navy-800">Step 1: Personal Information</CardTitle>
               <CardDescription className="text-navy-600 text-base mt-2">
-                Ces informations nous aident à personnaliser votre lecture
+                This information helps us personalize your reading
               </CardDescription>
             </CardHeader>
             <CardContent className="px-8 pb-8">
@@ -214,9 +208,9 @@ const HandlyForm = () => {
         {currentStep === 2 && (
           <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-playfair text-navy-800">Étape 2: Photos de vos Mains</CardTitle>
+              <CardTitle className="text-2xl font-playfair text-navy-800">Step 2: Hand Photos</CardTitle>
               <CardDescription className="text-navy-600 text-base mt-2">
-                Prenez des photos claires de vos deux mains pour une lecture précise
+                Take clear photos of both hands for an accurate reading
               </CardDescription>
             </CardHeader>
             <CardContent className="px-8 pb-8">
@@ -232,14 +226,14 @@ const HandlyForm = () => {
                   onClick={() => setCurrentStep(1)}
                   className="flex-1 border-sand-300 text-navy-700 hover:bg-sand-100 rounded-xl py-3"
                 >
-                  Retour
+                  Back
                 </Button>
                 <Button 
                   onClick={handleImagesSubmit}
                   disabled={isLoading || !dominantHandImage || !nonDominantHandImage}
                   className="flex-1 bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-3 shadow-sm hover:shadow-md transition-all"
                 >
-                  {isLoading ? 'Analyse en cours...' : 'Générer ma lecture'}
+                  {isLoading ? 'Analyzing...' : 'Generate my reading'}
                 </Button>
               </div>
             </CardContent>

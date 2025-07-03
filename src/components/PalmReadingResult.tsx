@@ -25,11 +25,11 @@ const PalmReadingResult: React.FC<PalmReadingResultProps> = ({
         <CardHeader className="text-center pb-6">
           <CardTitle className="text-3xl font-playfair text-navy-800 flex items-center justify-center gap-3">
             <Sparkles className="h-7 w-7 text-violet-600" />
-            Votre Lecture de Main
+            Your Palm Reading
             <Sparkles className="h-7 w-7 text-violet-600" />
           </CardTitle>
           <p className="text-lg text-navy-600 font-playfair italic mt-2">
-            Lecture personnalisée pour {personalInfo.name}
+            Personal reading for {personalInfo.name}
           </p>
         </CardHeader>
         <CardContent className="px-8 pb-8">
@@ -46,7 +46,7 @@ const PalmReadingResult: React.FC<PalmReadingResultProps> = ({
           className="flex items-center gap-3 border-violet-300 text-violet-700 hover:bg-violet-50 rounded-xl px-8 py-3 text-base shadow-sm hover:shadow-md transition-all"
         >
           <RotateCcw className="h-5 w-5" />
-          Nouvelle lecture
+          New reading
         </Button>
       </div>
     </div>

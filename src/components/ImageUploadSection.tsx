@@ -19,7 +19,7 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
     <div className="space-y-6">
       {/* Dominant Hand Image Upload */}
       <ImageUpload
-        label="Photo de la main dominante"
+        label="Dominant hand photo"
         required={true}
         onImageChange={onDominantHandChange}
         image={dominantHandImage}
@@ -27,7 +27,7 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
 
       {/* Non-Dominant Hand Image Upload */}
       <ImageUpload
-        label="Photo de la main non-dominante (Optionnel)"
+        label="Non-dominant hand photo (Optional)"
         required={false}
         onImageChange={onNonDominantHandChange}
         image={nonDominantHandImage}

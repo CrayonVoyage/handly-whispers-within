@@ -9,10 +9,10 @@ const ReadingMethod = () => {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-5xl font-playfair font-medium text-navy-800 mb-4">
-            Méthode de lecture
+            Reading Method
           </h1>
           <p className="text-xl text-navy-600 font-playfair italic">
-            Comprendre notre approche de la lecture palmaire
+            Understanding our palm reading approach
           </p>
         </div>
 
@@ -23,13 +23,13 @@ const ReadingMethod = () => {
               <Hand className="h-16 w-16 text-violet-600" />
             </div>
             <CardTitle className="text-3xl font-playfair text-navy-800">
-              Comment se fait la lecture de votre main ?
+              How is your palm reading performed?
             </CardTitle>
           </CardHeader>
           <CardContent className="px-8 pb-8">
             <p className="text-navy-600 text-lg leading-relaxed text-center">
-              Notre méthode repose sur l'observation rigoureuse des lignes principales et de la forme de la main. 
-              Voici comment nous procédons :
+              Our method relies on careful observation of the main lines and hand shape. 
+              Here is how we proceed:
             </p>
           </CardContent>
         </Card>
@@ -40,35 +40,35 @@ const ReadingMethod = () => {
             <div className="flex items-center gap-4">
               <Eye className="h-8 w-8 text-violet-600" />
               <CardTitle className="text-2xl font-playfair text-navy-800">
-                1. Observation générale
+                1. General observation
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-8 pb-8">
             <p className="text-navy-600 text-base leading-relaxed mb-6">
-              Nous commençons par analyser :
+              We begin by analyzing:
             </p>
             <ul className="space-y-3 text-navy-600">
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>La <strong>forme de la main</strong> (carrée, rectangulaire, etc.)</span>
+                <span>The <strong>hand shape</strong> (square, rectangular, etc.)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>La <strong>longueur et la position des doigts</strong></span>
+                <span>The <strong>length and position of fingers</strong></span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>Les <strong>monts</strong> (zones bombées sous les doigts)</span>
+                <span>The <strong>mounts</strong> (raised areas beneath the fingers)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>La <strong>texture et souplesse de la peau</strong></span>
+                <span>The <strong>texture and flexibility of the skin</strong></span>
               </li>
             </ul>
             <p className="text-navy-600 text-base leading-relaxed mt-6">
-              Cela nous permet de comprendre votre <strong>tempérament général</strong> : êtes-vous plutôt cérébral, 
-              intuitif, pratique, émotionnel ?
+              This allows us to understand your <strong>general temperament</strong>: are you more cerebral, 
+              intuitive, practical, or emotional?
             </p>
           </CardContent>
         </Card>
@@ -79,59 +79,59 @@ const ReadingMethod = () => {
             <div className="flex items-center gap-4">
               <Target className="h-8 w-8 text-violet-600" />
               <CardTitle className="text-2xl font-playfair text-navy-800">
-                2. Analyse des lignes principales
+                2. Analysis of main lines
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-8 pb-8 space-y-8">
             
-            {/* Ligne de cœur */}
+            {/* Heart line */}
             <div className="bg-cream-50/50 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Heart className="h-6 w-6 text-violet-600" />
-                <h3 className="text-xl font-playfair font-medium text-navy-800">Ligne de cœur</h3>
+                <h3 className="text-xl font-playfair font-medium text-navy-800">Heart line</h3>
               </div>
               <p className="text-navy-600 mb-4">
-                Elle renseigne sur votre manière d'aimer et vos émotions :
+                It reveals your way of loving and your emotions:
               </p>
               <ul className="space-y-2 text-navy-600">
-                <li>• Longue et incurvée : affectivité intense</li>
-                <li>• Droite sous l'index : maîtrise émotionnelle</li>
-                <li>• Ramifiée : sensibilité évolutive</li>
-                <li>• Brisée : tensions affectives ou ruptures</li>
+                <li>• Long and curved: intense affectivity</li>
+                <li>• Straight under the index: emotional control</li>
+                <li>• Branched: evolving sensitivity</li>
+                <li>• Broken: emotional tensions or ruptures</li>
               </ul>
             </div>
 
-            {/* Ligne de tête */}
+            {/* Head line */}
             <div className="bg-cream-50/50 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Brain className="h-6 w-6 text-violet-600" />
-                <h3 className="text-xl font-playfair font-medium text-navy-800">Ligne de tête</h3>
+                <h3 className="text-xl font-playfair font-medium text-navy-800">Head line</h3>
               </div>
               <p className="text-navy-600 mb-4">
-                Elle reflète votre mode de pensée :
+                It reflects your thinking patterns:
               </p>
               <ul className="space-y-2 text-navy-600">
-                <li>• Droite : esprit logique, structuré</li>
-                <li>• Courbe vers le bas : imagination développée</li>
-                <li>• Courte : décisions rapides</li>
-                <li>• Double : deux types d'intelligence coexistent</li>
+                <li>• Straight: logical, structured mind</li>
+                <li>• Curved downward: developed imagination</li>
+                <li>• Short: quick decisions</li>
+                <li>• Double: two types of intelligence coexist</li>
               </ul>
             </div>
 
-            {/* Ligne de vie */}
+            {/* Life line */}
             <div className="bg-cream-50/50 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Zap className="h-6 w-6 text-violet-600" />
-                <h3 className="text-xl font-playfair font-medium text-navy-800">Ligne de vie</h3>
+                <h3 className="text-xl font-playfair font-medium text-navy-800">Life line</h3>
               </div>
               <p className="text-navy-600 mb-4">
-                Elle parle de votre énergie vitale et stabilité :
+                It speaks of your vital energy and stability:
               </p>
               <ul className="space-y-2 text-navy-600">
-                <li>• Longue et marquée : vitalité, stabilité</li>
-                <li>• Fine ou brisée : périodes de fatigue ou changement</li>
-                <li>• Déviée vers le bas : besoin d'évasion ou de renouveau</li>
+                <li>• Long and marked: vitality, stability</li>
+                <li>• Fine or broken: periods of fatigue or change</li>
+                <li>• Deviated downward: need for escape or renewal</li>
               </ul>
             </div>
           </CardContent>
@@ -143,26 +143,26 @@ const ReadingMethod = () => {
             <div className="flex items-center gap-4">
               <Star className="h-8 w-8 text-violet-600" />
               <CardTitle className="text-2xl font-playfair text-navy-800">
-                3. Autres lignes
+                3. Other lines
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-8 pb-8">
             <p className="text-navy-600 text-base leading-relaxed mb-6">
-              Selon la netteté de votre main, d'autres lignes peuvent apparaître :
+              Depending on the clarity of your hand, other lines may appear:
             </p>
             <ul className="space-y-3 text-navy-600">
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>Ligne de destinée : vocation ou trajectoire de vie</span>
+                <span>Fate line: vocation or life trajectory</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>Ligne du Soleil : expression personnelle, créativité</span>
+                <span>Sun line: personal expression, creativity</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-violet-600 mt-1">•</span>
-                <span>Ligne de Mercure : communication ou sens pratique</span>
+                <span>Mercury line: communication or practical sense</span>
               </li>
             </ul>
           </CardContent>
@@ -172,13 +172,13 @@ const ReadingMethod = () => {
         <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-playfair text-navy-800">
-              4. Synthèse
+              4. Synthesis
             </CardTitle>
           </CardHeader>
           <CardContent className="px-8 pb-8">
             <p className="text-navy-600 text-base leading-relaxed">
-              Nous croisons les informations de l'ensemble de la main (dominante et non dominante) pour proposer 
-              une lecture structurée de vos forces, tensions internes et axes de développement.
+              We combine information from the entire hand (dominant and non-dominant) to provide 
+              a structured reading of your strengths, internal tensions, and areas for development.
             </p>
           </CardContent>
         </Card>
@@ -187,11 +187,11 @@ const ReadingMethod = () => {
         <Card className="shadow-lg border-violet-200 bg-lavender-50/50 rounded-2xl">
           <CardContent className="p-8 text-center">
             <p className="text-lg font-medium text-navy-800 mb-2">
-              Important à retenir
+              Important to remember
             </p>
             <p className="text-navy-600 text-base leading-relaxed">
-              La lecture ne prédit rien : elle propose un <strong>portrait de votre personnalité</strong> à partir 
-              de traits physiques observables.
+              Reading does not predict anything: it offers a <strong>portrait of your personality</strong> based on 
+              observable physical traits.
             </p>
           </CardContent>
         </Card>

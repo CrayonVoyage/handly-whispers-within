@@ -31,18 +31,18 @@ const Auth = () => {
 
   const checkUsername = async (usernameValue: string) => {
     if (!usernameValue || usernameValue.length < 3) {
-      setUsernameError('Le nom d\'utilisateur doit contenir au moins 3 caractères');
+      setUsernameError('Username must contain at least 3 characters');
       return false;
     }
     
     if (!/^[a-zA-Z0-9_]+$/.test(usernameValue)) {
-      setUsernameError('Le nom d\'utilisateur ne peut contenir que des lettres, chiffres et underscores');
+      setUsernameError('Username can only contain letters, numbers and underscores');
       return false;
     }
 
     const isAvailable = await checkUsernameAvailable(usernameValue);
     if (!isAvailable) {
-      setUsernameError('Ce nom d\'utilisateur est déjà pris');
+      setUsernameError('This username is already taken');
       return false;
     }
 
@@ -78,21 +78,21 @@ const Auth = () => {
 
       if (result.error) {
         toast({
-          title: "Erreur",
+          title: "Error",
           description: result.error.message,
           variant: "destructive"
         });
       } else if (!isLogin) {
         toast({
-          title: "Inscription réussie!",
-          description: "Vérifiez votre email pour confirmer votre compte."
+          title: "Registration successful!",
+          description: "Check your email to confirm your account."
         });
       }
     } catch (error) {
       console.error('Auth error:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        title: "Error",
+        description: "An error occurred. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -108,12 +108,12 @@ const Auth = () => {
             <Hand className="h-16 w-16 text-violet-600" />
           </div>
           <CardTitle className="text-3xl font-playfair font-medium text-navy-800">
-            {isLogin ? 'Connexion' : 'Inscription'}
+            {isLogin ? 'Sign In' : 'Sign Up'}
           </CardTitle>
           <CardDescription className="text-navy-600 text-base mt-2">
             {isLogin 
-              ? 'Connectez-vous à votre compte Handly' 
-              : 'Créez votre compte Handly'
+              ? 'Sign in to your Handly account' 
+              : 'Create your Handly account'
             }
           </CardDescription>
         </CardHeader>
@@ -123,7 +123,7 @@ const Auth = () => {
               <>
                 <div className="space-y-3">
                   <label htmlFor="fullName" className="text-base font-medium text-navy-700">
-                    Nom complet
+                    Full name
                   </label>
                   <Input
                     id="fullName"
@@ -131,14 +131,14 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required={!isLogin}
-                    placeholder="Votre nom complet"
+                    placeholder="Your full name"
                     className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
                   />
                 </div>
                 
                 <div className="space-y-3">
                   <label htmlFor="username" className="text-base font-medium text-navy-700">
-                    Nom d'utilisateur *
+                    Username *
                   </label>
                   <Input
                     id="username"
@@ -146,7 +146,7 @@ const Auth = () => {
                     value={username}
                     onChange={(e) => handleUsernameChange(e.target.value)}
                     required={!isLogin}
-                    placeholder="nom_utilisateur"
+                    placeholder="username"
                     className={`bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base ${usernameError ? 'border-red-500' : ''}`}
                   />
                   {usernameError && (
@@ -166,14 +166,14 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="votre@email.com"
+                placeholder="your@email.com"
                 className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
               />
             </div>
             
             <div className="space-y-3">
               <label htmlFor="password" className="text-base font-medium text-navy-700">
-                Mot de passe
+                Password
               </label>
               <div className="relative">
                 <Input
@@ -200,7 +200,7 @@ const Auth = () => {
               className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-4 text-base font-medium shadow-sm hover:shadow-md transition-all" 
               disabled={loading}
             >
-              {loading ? 'Chargement...' : (isLogin ? 'Se connecter' : 'S\'inscrire')}
+              {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
             </Button>
           </form>
           
@@ -211,8 +211,8 @@ const Auth = () => {
               className="text-base text-violet-600 hover:text-violet-800 font-medium"
             >
               {isLogin 
-                ? 'Pas encore de compte ? Inscrivez-vous' 
-                : 'Déjà un compte ? Connectez-vous'
+                ? 'No account yet? Sign up' 
+                : 'Already have an account? Sign in'
               }
             </button>
           </div>

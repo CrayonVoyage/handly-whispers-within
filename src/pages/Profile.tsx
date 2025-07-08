@@ -112,16 +112,16 @@ const Profile = () => {
 
       if (error) {
         toast({
-          title: "Erreur",
-          description: "Impossible de mettre à jour le profil",
+          title: "Error",
+          description: "Unable to update profile",
           variant: "destructive"
         });
         return;
       }
 
       toast({
-        title: "Succès",
-        description: "Profil mis à jour avec succès"
+        title: "Success",
+        description: "Profile updated successfully"
       });
       
       setEditing(false);
@@ -141,7 +141,7 @@ const Profile = () => {
       <div className="min-h-screen bg-cream-50 flex items-center justify-center">
         <div className="text-center">
           <Hand className="h-16 w-16 text-violet-600 mx-auto animate-pulse" />
-          <p className="mt-6 text-navy-600 text-lg">Chargement...</p>
+          <p className="mt-6 text-navy-600 text-lg">Loading...</p>
         </div>
       </div>
     );
@@ -152,10 +152,10 @@ const Profile = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
-          <h1 className="text-4xl font-playfair font-medium text-navy-800">Mon Profil</h1>
+          <h1 className="text-4xl font-playfair font-medium text-navy-800">My Profile</h1>
           <Button onClick={handleSignOut} variant="outline" className="border-sand-300 text-navy-700 hover:bg-sand-100 rounded-xl px-6 py-3">
             <LogOut className="h-4 w-4 mr-2" />
-            Déconnexion
+            Sign Out
           </Button>
         </div>
 
@@ -170,8 +170,8 @@ const Profile = () => {
                     <User className="h-12 w-12 text-violet-600" />
                   </AvatarFallback>
                 </Avatar>
-                <CardTitle className="text-xl font-playfair text-navy-800">{profile?.full_name || 'Utilisateur'}</CardTitle>
-                <CardDescription className="text-navy-600">@{profile?.username || 'nouveau-utilisateur'}</CardDescription>
+                <CardTitle className="text-xl font-playfair text-navy-800">{profile?.full_name || 'User'}</CardTitle>
+                <CardDescription className="text-navy-600">@{profile?.username || 'new-user'}</CardDescription>
               </CardHeader>
               <CardContent className="px-6 pb-6">
                 {!editing ? (
@@ -181,42 +181,42 @@ const Profile = () => {
                       <p className="text-navy-800 font-medium">{user?.email}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-navy-600 block mb-1">Nom d'utilisateur</label>
-                      <p className="text-navy-800 font-medium">{profile?.username || 'Non défini'}</p>
+                      <label className="text-sm font-medium text-navy-600 block mb-1">Username</label>
+                      <p className="text-navy-800 font-medium">{profile?.username || 'Not set'}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-navy-600 block mb-1">Nom complet</label>
-                      <p className="text-navy-800 font-medium">{profile?.full_name || 'Non défini'}</p>
+                      <label className="text-sm font-medium text-navy-600 block mb-1">Full name</label>
+                      <p className="text-navy-800 font-medium">{profile?.full_name || 'Not set'}</p>
                     </div>
                     <Button onClick={() => setEditing(true)} className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl py-3">
                       <Settings className="h-4 w-4 mr-2" />
-                      Modifier le profil
+                      Edit profile
                     </Button>
                   </div>
                 ) : (
                   <form onSubmit={handleUpdateProfile} className="space-y-6">
                     <div>
-                      <label className="text-sm font-medium text-navy-600 block mb-2">Nom d'utilisateur</label>
+                      <label className="text-sm font-medium text-navy-600 block mb-2">Username</label>
                       <Input
                         value={editForm.username}
                         onChange={(e) => setEditForm({...editForm, username: e.target.value})}
-                        placeholder="Nom d'utilisateur"
+                        placeholder="Username"
                         className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-navy-600 block mb-2">Nom complet</label>
+                      <label className="text-sm font-medium text-navy-600 block mb-2">Full name</label>
                       <Input
                         value={editForm.full_name}
                         onChange={(e) => setEditForm({...editForm, full_name: e.target.value})}
-                        placeholder="Nom complet"
+                        placeholder="Full name"
                         className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
                       />
                     </div>
                     <div className="flex gap-3">
-                      <Button type="submit" size="sm" className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl">Sauvegarder</Button>
+                      <Button type="submit" size="sm" className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl">Save</Button>
                       <Button type="button" variant="outline" size="sm" onClick={() => setEditing(false)} className="border-sand-300 text-navy-700 hover:bg-sand-100 rounded-xl">
-                        Annuler
+                        Cancel
                       </Button>
                     </div>
                   </form>
@@ -229,18 +229,18 @@ const Profile = () => {
           <div className="lg:col-span-2">
             <Card className="shadow-lg border-sand-200 bg-card rounded-2xl">
               <CardHeader className="pb-6">
-                <CardTitle className="text-2xl font-playfair text-navy-800">Mes Lectures de Main</CardTitle>
+                <CardTitle className="text-2xl font-playfair text-navy-800">My Palm Readings</CardTitle>
                 <CardDescription className="text-navy-600 text-base mt-2">
-                  Historique de vos lectures palmaires ({readings.length} lecture{readings.length !== 1 ? 's' : ''})
+                  History of your palm readings ({readings.length} reading{readings.length !== 1 ? 's' : ''})
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-6 pb-6">
                 {readings.length === 0 ? (
                   <div className="text-center py-12">
                     <Hand className="h-16 w-16 text-sand-400 mx-auto mb-6" />
-                    <p className="text-navy-600 text-lg mb-6">Aucune lecture de main pour le moment</p>
+                    <p className="text-navy-600 text-lg mb-6">No palm readings yet</p>
                     <Button onClick={() => navigate('/')} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-6 py-3">
-                      Commencer une lecture
+                      Start a reading
                     </Button>
                   </div>
                 ) : (
@@ -251,7 +251,7 @@ const Profile = () => {
                           <div>
                             <h3 className="font-playfair font-medium text-xl text-navy-800">{reading.name}</h3>
                             <p className="text-navy-600 mt-1">
-                              {reading.age} ans • {reading.gender} • Main dominante: {reading.dominant_hand}
+                              {reading.age} years old • {reading.gender} • Dominant hand: {reading.dominant_hand}
                             </p>
                             <p className="text-sm text-navy-500 mt-2">
                               {new Date(reading.created_at).toLocaleDateString('fr-FR', {

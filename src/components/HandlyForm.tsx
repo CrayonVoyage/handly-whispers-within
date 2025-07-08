@@ -289,10 +289,10 @@ const HandlyForm = () => {
         {/* Footer link */}
         <div className="text-center">
           <button
-            onClick={() => navigate('/methode-de-lecture')}
+            onClick={() => navigate('/reading-method')}
             className="text-base text-violet-600 hover:text-violet-800 font-medium underline"
           >
-            Comment fonctionne notre méthode de lecture ?
+            How does our reading method work?
           </button>
         </div>
       </div>

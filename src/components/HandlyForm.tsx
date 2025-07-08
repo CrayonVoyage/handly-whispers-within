@@ -285,6 +285,16 @@ const HandlyForm = () => {
             onReset={resetForm}
           />
         )}
+
+        {/* Footer link */}
+        <div className="text-center">
+          <button
+            onClick={() => navigate('/methode-de-lecture')}
+            className="text-base text-violet-600 hover:text-violet-800 font-medium underline"
+          >
+            Comment fonctionne notre méthode de lecture ?
+          </button>
+        </div>
       </div>
     </div>
   );

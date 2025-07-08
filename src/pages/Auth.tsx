@@ -13,10 +13,12 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
   
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, checkUsernameAvailable } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -27,6 +29,34 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
+  const checkUsername = async (usernameValue: string) => {
+    if (!usernameValue || usernameValue.length < 3) {
+      setUsernameError('Le nom d\'utilisateur doit contenir au moins 3 caractères');
+      return false;
+    }
+    
+    if (!/^[a-zA-Z0-9_]+$/.test(usernameValue)) {
+      setUsernameError('Le nom d\'utilisateur ne peut contenir que des lettres, chiffres et underscores');
+      return false;
+    }
+
+    const isAvailable = await checkUsernameAvailable(usernameValue);
+    if (!isAvailable) {
+      setUsernameError('Ce nom d\'utilisateur est déjà pris');
+      return false;
+    }
+
+    setUsernameError('');
+    return true;
+  };
+
+  const handleUsernameChange = async (value: string) => {
+    setUsername(value);
+    if (value && !isLogin) {
+      await checkUsername(value);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -36,7 +66,14 @@ const Auth = () => {
       if (isLogin) {
         result = await signIn(email, password);
       } else {
-        result = await signUp(email, password, fullName);
+        // Validate username before signup
+        const isUsernameValid = await checkUsername(username);
+        if (!isUsernameValid) {
+          setLoading(false);
+          return;
+        }
+        
+        result = await signUp(email, password, fullName, username);
       }
 
       if (result.error) {
@@ -83,20 +120,40 @@ const Auth = () => {
         <CardContent className="px-8 pb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
-              <div className="space-y-3">
-                <label htmlFor="fullName" className="text-base font-medium text-navy-700">
-                  Nom complet
-                </label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required={!isLogin}
-                  placeholder="Votre nom complet"
-                  className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
-                />
-              </div>
+              <>
+                <div className="space-y-3">
+                  <label htmlFor="fullName" className="text-base font-medium text-navy-700">
+                    Nom complet
+                  </label>
+                  <Input
+                    id="fullName"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required={!isLogin}
+                    placeholder="Votre nom complet"
+                    className="bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base"
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <label htmlFor="username" className="text-base font-medium text-navy-700">
+                    Nom d'utilisateur *
+                  </label>
+                  <Input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => handleUsernameChange(e.target.value)}
+                    required={!isLogin}
+                    placeholder="nom_utilisateur"
+                    className={`bg-white border-sand-300 focus:border-violet-400 focus:ring-violet-400 rounded-xl py-3 px-4 text-base ${usernameError ? 'border-red-500' : ''}`}
+                  />
+                  {usernameError && (
+                    <p className="text-red-500 text-sm mt-1">{usernameError}</p>
+                  )}
+                </div>
+              </>
             )}
             
             <div className="space-y-3">

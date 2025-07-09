@@ -28,23 +28,36 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
   const searchUsers = useCallback(async (query: string) => {
     if (!query || query.length < 2 || !currentUserId) return;
 
+    console.log('🔍 Searching for:', query);
+    console.log('📋 Current user ID:', currentUserId);
+
     setSearchLoading(true);
     try {
       // First get user_ids with completed readings
-      const { data: completedReadings } = await supabase
+      const { data: completedReadings, error: readingsError } = await supabase
         .from('handly_users')
         .select('user_id')
         .not('reading_result', 'is', null);
 
-      if (!completedReadings) {
+      console.log('📊 Completed readings query result:', { completedReadings, readingsError });
+
+      if (readingsError) {
+        console.error('❌ Error fetching completed readings:', readingsError);
+        setUserSuggestions([]);
+        return;
+      }
+
+      if (!completedReadings || completedReadings.length === 0) {
+        console.log('⚠️ No users with completed readings found');
         setUserSuggestions([]);
         return;
       }
 
       const userIdsWithReadings = completedReadings.map(r => r.user_id).filter(Boolean);
+      console.log('👥 User IDs with readings:', userIdsWithReadings);
 
       // Then fetch profiles that match the search and have completed readings
-      const { data: profiles } = await supabase
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('username, full_name, user_id')
         .ilike('username', `%${query}%`)
@@ -52,14 +65,28 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
         .in('user_id', userIdsWithReadings)
         .limit(10);
 
+      console.log('👤 Profiles query result:', { profiles, profilesError });
+
+      if (profilesError) {
+        console.error('❌ Error fetching profiles:', profilesError);
+        setUserSuggestions([]);
+        return;
+      }
+
       if (profiles) {
-        setUserSuggestions(profiles.map(p => ({
+        const suggestions = profiles.map(p => ({
           username: p.username,
           full_name: p.full_name || p.username
-        })));
+        }));
+        console.log('✅ Final suggestions:', suggestions);
+        setUserSuggestions(suggestions);
+      } else {
+        console.log('📭 No matching profiles found');
+        setUserSuggestions([]);
       }
     } catch (error) {
-      console.error('Error searching users:', error);
+      console.error('💥 Unexpected error searching users:', error);
+      setUserSuggestions([]);
     } finally {
       setSearchLoading(false);
     }
@@ -98,7 +125,7 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
+          <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
             <Command>
               <CommandInput 
                 placeholder="Type username..." 

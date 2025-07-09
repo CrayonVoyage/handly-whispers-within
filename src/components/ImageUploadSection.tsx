@@ -17,6 +17,31 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
 }) => {
   return (
     <div className="space-y-6">
+      {/* Photo Orientation Tips */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+        <h4 className="font-semibold text-blue-900 mb-3 flex items-center text-base">
+          📸 **Photo orientation tips:**
+        </h4>
+        <ul className="text-blue-800 space-y-1 text-sm">
+          <li className="flex items-start gap-2">
+            <span className="text-blue-600 font-medium">•</span>
+            <span>Keep your palm flat with fingers pointing upward</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-600 font-medium">•</span>
+            <span>Take the photo from directly above the hand</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-600 font-medium">•</span>
+            <span>Center the hand vertically in the frame</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-600 font-medium">•</span>
+            <span>Do not rotate the image manually — instead, take the photo in the correct orientation</span>
+          </li>
+        </ul>
+      </div>
+
       {/* Enhanced Image Guidelines */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
         <h4 className="font-semibold text-blue-900 mb-4 flex items-center text-lg">

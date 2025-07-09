@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [palmData, setPalmData] = useState<PalmReadingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileExpanded, setProfileExpanded] = useState(false);
+  const [readingExpanded, setReadingExpanded] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -179,19 +180,35 @@ const Dashboard = () => {
               Your Palm Reading
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-center">
-            {palmData?.reading_result ? (
-              <div className="text-foreground">
-                <p className="line-clamp-3 text-sm mb-4">{palmData.reading_result}</p>
-                <Button 
-                  onClick={() => navigate('/palm-reading')}
-                  variant="link"
-                  className="text-primary hover:text-primary/80 p-0"
-                >
-                  Read full analysis →
-                </Button>
-              </div>
-            ) : (
+          {palmData?.reading_result ? (
+            <Collapsible open={readingExpanded} onOpenChange={setReadingExpanded}>
+              <CardContent className="text-center">
+                <div className="text-foreground">
+                  <p className="line-clamp-3 text-sm mb-4">{palmData.reading_result}</p>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" size="sm" className="flex items-center space-x-2 mx-auto">
+                      <span className="text-sm">
+                        {readingExpanded ? 'Show less' : 'Show more'}
+                      </span>
+                      {readingExpanded ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+              </CardContent>
+              <CollapsibleContent>
+                <CardContent className="pt-0 text-center">
+                  <div className="text-foreground text-sm whitespace-pre-wrap">
+                    {palmData.reading_result}
+                  </div>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          ) : (
+            <CardContent className="text-center">
               <div className="text-foreground">
                 <p className="mb-4 text-sm">Your palm reading isn't ready yet. Go to the Palm Reading page to generate it.</p>
                 <Button 
@@ -201,8 +218,8 @@ const Dashboard = () => {
                   Start Palm Reading
                 </Button>
               </div>
-            )}
-          </CardContent>
+            </CardContent>
+          )}
         </Card>
 
 
@@ -217,10 +234,10 @@ const Dashboard = () => {
                 <Hand className="h-10 w-10 text-primary" />
                 <div>
                   <CardTitle className="text-xl font-playfair text-foreground group-hover:text-primary transition-colors">
-                    Palm Reading
+                    New Palm Reading
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
-                    Analyze your palms and discover insights
+                    Generate a new reading to replace your current one
                   </CardDescription>
                 </div>
               </div>

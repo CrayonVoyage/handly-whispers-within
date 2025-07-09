@@ -49,6 +49,8 @@ serve(async (req) => {
     - Finger lengths and proportions relative to each other
     - Visible mounts and their development
     - Any distinctive characteristics that make this hand different from others
+    
+    CRITICAL: Be explicit when the line shape, length, or features cannot be confidently determined from the image. State clearly what you can and cannot see, and base interpretations only on clearly visible features.
 
     STEP 2 - CREATE PERSONALIZED READING:
     Based on your specific observations, create a reading that:

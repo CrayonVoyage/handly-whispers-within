@@ -38,8 +38,12 @@ const Profile = () => {
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     username: '',
-    full_name: ''
+    full_name: '',
+    age: '',
+    gender: '',
+    dominant_hand: ''
   });
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -68,7 +72,10 @@ const Profile = () => {
         setProfile(data);
         setEditForm({
           username: data.username || '',
-          full_name: data.full_name || ''
+          full_name: data.full_name || '',
+          age: '',
+          gender: '',
+          dominant_hand: ''
         });
       }
     } catch (error) {
@@ -92,6 +99,17 @@ const Profile = () => {
       }
 
       setReadings(data || []);
+      
+      // Get latest palm reading data for age, gender, dominant_hand
+      if (data && data.length > 0) {
+        const latestReading = data[0];
+        setEditForm(prev => ({
+          ...prev,
+          age: latestReading.age?.toString() || '',
+          gender: latestReading.gender || '',
+          dominant_hand: latestReading.dominant_hand || ''
+        }));
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -101,7 +119,8 @@ const Profile = () => {
     e.preventDefault();
     
     try {
-      const { error } = await supabase
+      // Update profiles table
+      const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
           user_id: user?.id,
@@ -110,13 +129,55 @@ const Profile = () => {
           updated_at: new Date().toISOString()
         });
 
-      if (error) {
+      if (profileError) {
         toast({
           title: "Error",
           description: "Unable to update profile",
           variant: "destructive"
         });
         return;
+      }
+
+      // Update handly_users table if age, gender, or dominant_hand changed
+      if (editForm.age || editForm.gender || editForm.dominant_hand) {
+        const { data: existingData } = await supabase
+          .from('handly_users')
+          .select('id')
+          .eq('user_id', user?.id)
+          .maybeSingle();
+
+        if (existingData) {
+          // Update existing record
+          const { error: handlyError } = await supabase
+            .from('handly_users')
+            .update({
+              name: editForm.full_name || editForm.username || '',
+              age: parseInt(editForm.age) || 0,
+              gender: editForm.gender as any,
+              dominant_hand: editForm.dominant_hand as any,
+              updated_at: new Date().toISOString()
+            })
+            .eq('user_id', user?.id);
+
+          if (handlyError) {
+            console.error('Handly update error:', handlyError);
+          }
+        } else {
+          // Insert new record
+          const { error: handlyError } = await supabase
+            .from('handly_users')
+            .insert({
+              user_id: user?.id,
+              name: editForm.full_name || editForm.username || '',
+              age: parseInt(editForm.age) || 0,
+              gender: editForm.gender as any,
+              dominant_hand: editForm.dominant_hand as any
+            });
+
+          if (handlyError) {
+            console.error('Handly insert error:', handlyError);
+          }
+        }
       }
 
       toast({
@@ -126,8 +187,57 @@ const Profile = () => {
       
       setEditing(false);
       fetchProfile();
+      fetchReadings();
     } catch (error) {
       console.error('Error updating profile:', error);
+    }
+  };
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    setUploadingAvatar(true);
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/avatar.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('hand-images')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('hand-images')
+        .getPublicUrl(fileName);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: urlData.publicUrl })
+        .eq('user_id', user.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Success",
+        description: "Profile picture updated successfully"
+      });
+      
+      fetchProfile();
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload profile picture",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
@@ -181,13 +291,31 @@ const Profile = () => {
                       <User className="h-12 w-12 text-primary" />
                     </AvatarFallback>
                   </Avatar>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="absolute -bottom-2 -right-2 rounded-full h-8 w-8 p-0"
-                  >
-                    <Camera className="h-4 w-4" />
-                  </Button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                    id="avatar-upload"
+                    disabled={uploadingAvatar}
+                  />
+                  <label htmlFor="avatar-upload">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="absolute -bottom-2 -right-2 rounded-full h-8 w-8 p-0 cursor-pointer"
+                      disabled={uploadingAvatar}
+                      asChild
+                    >
+                      <span>
+                        {uploadingAvatar ? (
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                        ) : (
+                          <Camera className="h-4 w-4" />
+                        )}
+                      </span>
+                    </Button>
+                  </label>
                 </div>
                 <CardTitle className="text-xl font-playfair text-foreground">{profile?.full_name || 'User'}</CardTitle>
                 <CardDescription className="text-muted-foreground">@{profile?.username || 'new-user'}</CardDescription>
@@ -207,6 +335,22 @@ const Profile = () => {
                       <label className="text-sm font-medium text-muted-foreground block mb-1">Full name (optional)</label>
                       <p className="text-foreground font-medium">{profile?.full_name || 'Not set'}</p>
                     </div>
+                    {(editForm.age || editForm.gender || editForm.dominant_hand) && (
+                      <>
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground block mb-1">Age</label>
+                          <p className="text-foreground font-medium">{editForm.age || 'Not set'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground block mb-1">Gender</label>
+                          <p className="text-foreground font-medium">{editForm.gender || 'Not set'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground block mb-1">Dominant Hand</label>
+                          <p className="text-foreground font-medium">{editForm.dominant_hand || 'Not set'}</p>
+                        </div>
+                      </>
+                    )}
                     <Button onClick={() => setEditing(true)} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-3">
                       <Settings className="h-4 w-4 mr-2" />
                       Edit profile
@@ -232,6 +376,44 @@ const Profile = () => {
                         placeholder="Full name"
                         className="bg-background border-border focus:border-primary focus:ring-primary rounded-xl"
                       />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">Age</label>
+                      <Input
+                        type="number"
+                        value={editForm.age}
+                        onChange={(e) => setEditForm({...editForm, age: e.target.value})}
+                        placeholder="Your age"
+                        min="1"
+                        max="150"
+                        className="bg-background border-border focus:border-primary focus:ring-primary rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">Gender</label>
+                      <select 
+                        value={editForm.gender}
+                        onChange={(e) => setEditForm({...editForm, gender: e.target.value})}
+                        className="w-full py-3 px-4 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground text-base"
+                      >
+                        <option value="">Select your gender</option>
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground block mb-2">Dominant Hand</label>
+                      <select 
+                        value={editForm.dominant_hand}
+                        onChange={(e) => setEditForm({...editForm, dominant_hand: e.target.value})}
+                        className="w-full py-3 px-4 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground text-base"
+                      >
+                        <option value="">Select your dominant hand</option>
+                        <option value="Left">Left</option>
+                        <option value="Right">Right</option>
+                      </select>
                     </div>
                     <div className="flex gap-3">
                       <Button type="submit" size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">Save</Button>

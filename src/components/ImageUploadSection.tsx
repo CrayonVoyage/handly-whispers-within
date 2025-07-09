@@ -1,7 +1,6 @@
 
 import React from 'react';
 import ImageUpload from './ImageUpload';
-import HandScheme from './HandScheme';
 
 interface ImageUploadSectionProps {
   dominantHandImage: File | null;
@@ -51,11 +50,15 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
             </ul>
           </div>
           
-          {/* Example Hand Scheme */}
+          {/* Example Hand Image */}
           <div className="text-center">
             <p className="text-blue-700 font-medium mb-3">Good example:</p>
             <div className="bg-white p-3 rounded-lg border-2 border-blue-200 inline-block">
-              <HandScheme className="w-32 h-40 text-blue-600" />
+              <img 
+                src="/lovable-uploads/177d0ff6-b220-499b-8e6d-215a90345018.png" 
+                alt="Hand diagram showing proper positioning" 
+                className="w-32 h-40 object-contain"
+              />
             </div>
             <p className="text-xs text-blue-600 mt-2">Top-down, fingers up, clean lighting</p>
           </div>

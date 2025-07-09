@@ -8,8 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { UserSearch } from '@/components/compare/UserSearch';
 import { UserProfileComparison } from '@/components/compare/UserProfileComparison';
-import { PalmReadingComparison } from '@/components/compare/PalmReadingComparison';
-import { ComparisonInsights } from '@/components/compare/ComparisonInsights';
+import { NarrativeComparison } from '@/components/compare/NarrativeComparison';
 import { CompletePalmReadingPrompt } from '@/components/compare/CompletePalmReadingPrompt';
 
 interface UserProfile {
@@ -23,6 +22,7 @@ interface PalmReadingData {
   gender: string;
   dominant_hand: string;
   reading_result: string | null;
+  palm_lines_data?: any;
 }
 
 interface UserComparisonData {
@@ -61,7 +61,7 @@ const Compare = () => {
       // Fetch current user's palm reading data
       const { data: palmData } = await supabase
         .from('handly_users')
-        .select('age, gender, dominant_hand, reading_result')
+        .select('age, gender, dominant_hand, reading_result, palm_lines_data')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
@@ -101,7 +101,7 @@ const Compare = () => {
       // Fetch their palm reading data
       const { data: palmData } = await supabase
         .from('handly_users')
-        .select('age, gender, dominant_hand, reading_result')
+        .select('age, gender, dominant_hand, reading_result, palm_lines_data')
         .eq('user_id', profileData.user_id)
         .order('created_at', { ascending: false })
         .limit(1)
@@ -205,14 +205,9 @@ const Compare = () => {
                 compareUser={compareUserData}
               />
 
-              <PalmReadingComparison 
+              <NarrativeComparison 
                 currentUser={currentUserData}
                 compareUser={compareUserData}
-              />
-
-              <ComparisonInsights 
-                currentUserData={currentUserData.palmData}
-                compareUserData={compareUserData.palmData}
               />
             </CardContent>
           )}

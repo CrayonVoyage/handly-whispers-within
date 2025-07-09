@@ -3,12 +3,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { supabase } from '@/integrations/supabase/client';
-import { Hand, Users, ArrowRight } from 'lucide-react';
+import { Hand, Users, User, ChevronDown, ChevronUp, Info } from 'lucide-react';
 
 interface UserProfile {
   username: string;
   full_name: string;
+  avatar_url: string | null;
 }
 
 interface PalmReadingData {
@@ -24,6 +27,7 @@ const Dashboard = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [palmData, setPalmData] = useState<PalmReadingData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileExpanded, setProfileExpanded] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -36,7 +40,7 @@ const Dashboard = () => {
         // Fetch profile
         const { data: profileData } = await supabase
           .from('profiles')
-          .select('username, full_name')
+          .select('username, full_name, avatar_url')
           .eq('user_id', user.id)
           .single();
 
@@ -104,27 +108,58 @@ const Dashboard = () => {
 
         {/* Profile Summary */}
         <Card className="bg-card shadow-lg border-border rounded-2xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl font-playfair text-foreground">
-              Your Profile
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            {palmData ? (
-              <div className="space-y-2 text-foreground">
-                <p><span className="font-medium">Age:</span> {palmData.age}</p>
-                <p><span className="font-medium">Gender:</span> {palmData.gender}</p>
-                <p><span className="font-medium">Dominant Hand:</span> {palmData.dominant_hand}</p>
+          <Collapsible open={profileExpanded} onOpenChange={setProfileExpanded}>
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Avatar className="h-12 w-12 border-2 border-primary/20">
+                    <AvatarImage src={profile?.avatar_url || ''} />
+                    <AvatarFallback className="bg-primary/10">
+                      <User className="h-6 w-6 text-primary" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-left">
+                    <CardTitle className="text-lg font-playfair text-foreground">
+                      {profile?.username || 'User'}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {profile?.full_name || 'No name set'}
+                    </p>
+                  </div>
+                </div>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    {profileExpanded ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
               </div>
-            ) : (
-              <p className="text-muted-foreground">No profile information available yet.</p>
-            )}
+            </CardHeader>
+            <CollapsibleContent>
+              <CardContent className="pt-0">
+                {palmData ? (
+                  <div className="space-y-2 text-foreground text-sm">
+                    <p><span className="font-medium">Age:</span> {palmData.age}</p>
+                    <p><span className="font-medium">Gender:</span> {palmData.gender}</p>
+                    <p><span className="font-medium">Dominant Hand:</span> {palmData.dominant_hand}</p>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-sm">No additional profile information available yet.</p>
+                )}
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
+          <CardContent className="pt-0">
             <Button 
               onClick={() => navigate('/profile')}
-              variant="link"
-              className="text-primary hover:text-primary/80 mt-2"
+              variant="outline"
+              size="sm"
+              className="w-full"
             >
-              Edit Profile →
+              Edit Profile
             </Button>
           </CardContent>
         </Card>
@@ -162,17 +197,17 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Navigation Options */}
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* Main Navigation Options */}
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
           <Card className="bg-card shadow-lg border-border rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
             <CardHeader 
               onClick={() => navigate('/palm-reading')}
               className="pb-4 text-center"
             >
               <div className="flex flex-col items-center space-y-3">
-                <Hand className="h-8 w-8 text-primary" />
+                <Hand className="h-10 w-10 text-primary" />
                 <div>
-                  <CardTitle className="text-lg font-playfair text-foreground group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl font-playfair text-foreground group-hover:text-primary transition-colors">
                     Palm Reading
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
@@ -185,38 +220,50 @@ const Dashboard = () => {
 
           <Card className="bg-card shadow-lg border-border rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
             <CardHeader 
-              onClick={() => navigate('/reading-method')}
-              className="pb-4 text-center"
-            >
-              <div className="flex flex-col items-center space-y-3">
-                <Hand className="h-8 w-8 text-primary" />
-                <div>
-                  <CardTitle className="text-lg font-playfair text-foreground group-hover:text-primary transition-colors">
-                    Reading Method
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground">
-                    Learn about our palm reading approach
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className="bg-card shadow-lg border-border rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
-            <CardHeader 
               onClick={() => navigate('/compare')}
               className="pb-4 text-center"
             >
               <div className="flex flex-col items-center space-y-3">
-                <Users className="h-8 w-8 text-primary" />
+                <Users className="h-10 w-10 text-primary" />
                 <div>
-                  <CardTitle className="text-lg font-playfair text-foreground group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl font-playfair text-foreground group-hover:text-primary transition-colors">
                     Compare with Others
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
                     Compare your reading with other users
                   </CardDescription>
                 </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Secondary Links */}
+        <div className="grid md:grid-cols-2 gap-4">
+          <Card className="bg-card/50 border-border rounded-xl hover:bg-card/70 transition-colors cursor-pointer">
+            <CardHeader 
+              onClick={() => navigate('/about')}
+              className="pb-3 text-center"
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Info className="h-5 w-5 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  About Us
+                </CardTitle>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-card/50 border-border rounded-xl hover:bg-card/70 transition-colors cursor-pointer">
+            <CardHeader 
+              onClick={() => navigate('/reading-method')}
+              className="pb-3 text-center"
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Hand className="h-5 w-5 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  Reading Method
+                </CardTitle>
               </div>
             </CardHeader>
           </Card>

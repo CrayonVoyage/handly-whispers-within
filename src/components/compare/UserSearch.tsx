@@ -53,8 +53,9 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
         return;
       }
 
-      const userIdsWithReadings = completedReadings.map(r => r.user_id).filter(Boolean);
-      console.log('👥 User IDs with readings:', userIdsWithReadings);
+      // Remove duplicate user IDs using Set to handle cases where users have multiple records
+      const userIdsWithReadings = [...new Set(completedReadings.map(r => r.user_id).filter(Boolean))];
+      console.log('👥 User IDs with readings (deduplicated):', userIdsWithReadings);
 
       // Then fetch profiles that match the search and have completed readings
       const { data: profiles, error: profilesError } = await supabase

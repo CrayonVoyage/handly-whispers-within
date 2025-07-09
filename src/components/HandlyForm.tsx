@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import PersonalInfoForm from './PersonalInfoForm';
@@ -28,6 +28,43 @@ const HandlyForm = () => {
   const [nonDominantHandImage, setNonDominantHandImage] = useState<File | null>(null);
   const [palmReading, setPalmReading] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch user profile data to pre-fill form
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user) return;
+      
+      try {
+        // Get profile data
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('full_name, username')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        // Get palm reading data
+        const { data: palmData } = await supabase
+          .from('handly_users')
+          .select('age, gender, dominant_hand')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        // Pre-fill form with existing data
+        setPersonalInfo({
+          name: profileData?.full_name || profileData?.username || '',
+          age: palmData?.age?.toString() || '',
+          gender: palmData?.gender || '',
+          dominant_hand: palmData?.dominant_hand || ''
+        });
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user]);
 
   const uploadImage = async (file: File, path: string) => {
     console.log('Uploading image to path:', path);

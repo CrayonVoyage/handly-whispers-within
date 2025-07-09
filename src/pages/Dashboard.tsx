@@ -73,74 +73,87 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
-        <div className="text-navy-600">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-playfair font-medium text-navy-800">
-            Hello, {profile?.username || 'there'}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <Hand className="h-12 w-12 text-primary" />
+          </div>
+          <h1 className="text-4xl font-playfair font-medium text-foreground mb-2">
+            Handly
           </h1>
+          <h2 className="text-2xl font-playfair text-foreground">
+            Hello, {profile?.username || 'there'}
+          </h2>
           <Button 
             onClick={handleSignOut}
             variant="outline"
-            className="border-sand-300 text-navy-600 hover:bg-sand-50"
+            className="mt-4"
           >
             Sign Out
           </Button>
         </div>
 
         {/* Profile Summary */}
-        <Card className="bg-card shadow-lg border-sand-200 rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-xl font-playfair text-navy-800">
+        <Card className="bg-card shadow-lg border-border rounded-2xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl font-playfair text-foreground">
               Your Profile
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="text-center">
             {palmData ? (
-              <div className="space-y-2 text-navy-600">
+              <div className="space-y-2 text-foreground">
                 <p><span className="font-medium">Age:</span> {palmData.age}</p>
                 <p><span className="font-medium">Gender:</span> {palmData.gender}</p>
                 <p><span className="font-medium">Dominant Hand:</span> {palmData.dominant_hand}</p>
               </div>
             ) : (
-              <p className="text-navy-600">No profile information available yet.</p>
+              <p className="text-muted-foreground">No profile information available yet.</p>
             )}
+            <Button 
+              onClick={() => navigate('/profile')}
+              variant="link"
+              className="text-primary hover:text-primary/80 mt-2"
+            >
+              Edit Profile →
+            </Button>
           </CardContent>
         </Card>
 
         {/* Palm Reading Summary */}
-        <Card className="bg-card shadow-lg border-sand-200 rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-xl font-playfair text-navy-800">
+        <Card className="bg-card shadow-lg border-border rounded-2xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl font-playfair text-foreground">
               Your Palm Reading
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="text-center">
             {palmData?.reading_result ? (
-              <div className="text-navy-600">
+              <div className="text-foreground">
                 <p className="line-clamp-4">{palmData.reading_result}</p>
                 <Button 
                   onClick={() => navigate('/palm-reading')}
                   variant="link"
-                  className="text-violet-600 hover:text-violet-800 p-0 mt-2"
+                  className="text-primary hover:text-primary/80 p-0 mt-2"
                 >
                   Read full analysis →
                 </Button>
               </div>
             ) : (
-              <div className="text-navy-600">
+              <div className="text-foreground">
                 <p className="mb-4">Your palm reading isn't ready yet. Go to the Palm Reading page to generate it.</p>
                 <Button 
                   onClick={() => navigate('/palm-reading')}
-                  className="bg-violet-600 hover:bg-violet-700 text-white"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   Start Palm Reading
                 </Button>
@@ -150,43 +163,60 @@ const Dashboard = () => {
         </Card>
 
         {/* Navigation Options */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="bg-card shadow-lg border-sand-200 rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card className="bg-card shadow-lg border-border rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
             <CardHeader 
               onClick={() => navigate('/palm-reading')}
-              className="pb-4"
+              className="pb-4 text-center"
             >
-              <div className="flex items-center space-x-3">
-                <Hand className="h-8 w-8 text-violet-600" />
+              <div className="flex flex-col items-center space-y-3">
+                <Hand className="h-8 w-8 text-primary" />
                 <div>
-                  <CardTitle className="text-lg font-playfair text-navy-800 group-hover:text-violet-600 transition-colors">
+                  <CardTitle className="text-lg font-playfair text-foreground group-hover:text-primary transition-colors">
                     Palm Reading
                   </CardTitle>
-                  <CardDescription className="text-navy-600">
+                  <CardDescription className="text-muted-foreground">
                     Analyze your palms and discover insights
                   </CardDescription>
                 </div>
-                <ArrowRight className="h-5 w-5 text-navy-400 group-hover:text-violet-600 transition-colors ml-auto" />
               </div>
             </CardHeader>
           </Card>
 
-          <Card className="bg-card shadow-lg border-sand-200 rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
+          <Card className="bg-card shadow-lg border-border rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
+            <CardHeader 
+              onClick={() => navigate('/reading-method')}
+              className="pb-4 text-center"
+            >
+              <div className="flex flex-col items-center space-y-3">
+                <Hand className="h-8 w-8 text-primary" />
+                <div>
+                  <CardTitle className="text-lg font-playfair text-foreground group-hover:text-primary transition-colors">
+                    Reading Method
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">
+                    Learn about our palm reading approach
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-card shadow-lg border-border rounded-2xl hover:shadow-xl transition-shadow cursor-pointer group">
             <CardHeader 
               onClick={() => navigate('/compare')}
-              className="pb-4"
+              className="pb-4 text-center"
             >
-              <div className="flex items-center space-x-3">
-                <Users className="h-8 w-8 text-violet-600" />
+              <div className="flex flex-col items-center space-y-3">
+                <Users className="h-8 w-8 text-primary" />
                 <div>
-                  <CardTitle className="text-lg font-playfair text-navy-800 group-hover:text-violet-600 transition-colors">
+                  <CardTitle className="text-lg font-playfair text-foreground group-hover:text-primary transition-colors">
                     Compare with Others
                   </CardTitle>
-                  <CardDescription className="text-navy-600">
+                  <CardDescription className="text-muted-foreground">
                     Compare your reading with other users
                   </CardDescription>
                 </div>
-                <ArrowRight className="h-5 w-5 text-navy-400 group-hover:text-violet-600 transition-colors ml-auto" />
               </div>
             </CardHeader>
           </Card>

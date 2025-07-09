@@ -92,7 +92,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <Loader2 className="mx-auto h-16 w-16 text-violet-600 animate-spin" />
             <div className="mt-6">
               <p className="text-base text-navy-600">
-                Compression de l'image en cours...
+                Compressing image...
               </p>
             </div>
           </div>
@@ -121,10 +121,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <Hand className="mx-auto h-16 w-16 text-sand-400" />
             <div className="mt-6">
               <p className="text-base text-navy-600 font-medium">
-                Cliquez pour télécharger votre photo
+                Click to upload your photo
               </p>
               <p className="text-sm text-navy-500 mt-2">
-                PNG, JPG - Optimisation automatique à moins de 1 Mo
+                PNG, JPG - Automatic optimization under 1 MB
               </p>
             </div>
           </div>

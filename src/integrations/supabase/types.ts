@@ -25,6 +25,7 @@ export type Database = {
           is_premium: boolean
           name: string
           non_dominant_hand_image_url: string | null
+          palm_lines_data: Json | null
           reading_result: string | null
           updated_at: string
           user_id: string | null
@@ -39,6 +40,7 @@ export type Database = {
           is_premium?: boolean
           name: string
           non_dominant_hand_image_url?: string | null
+          palm_lines_data?: Json | null
           reading_result?: string | null
           updated_at?: string
           user_id?: string | null
@@ -53,6 +55,7 @@ export type Database = {
           is_premium?: boolean
           name?: string
           non_dominant_hand_image_url?: string | null
+          palm_lines_data?: Json | null
           reading_result?: string | null
           updated_at?: string
           user_id?: string | null

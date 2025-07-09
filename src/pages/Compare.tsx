@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Users, Hand, Search } from 'lucide-react';
+import { ArrowLeft, Users, Hand, Search, Check, ChevronsUpDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface UserProfile {
   username: string;
@@ -36,6 +38,10 @@ const Compare = () => {
   const [compareUserData, setCompareUserData] = useState<UserComparisonData | null>(null);
   const [loading, setLoading] = useState(false);
   const [isComparing, setIsComparing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userSuggestions, setUserSuggestions] = useState<Array<{username: string, full_name: string}>>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -75,6 +81,47 @@ const Compare = () => {
       console.error('Error fetching current user data:', error);
     }
   };
+
+  const searchUsers = useCallback(async (query: string) => {
+    if (!query || query.length < 2 || !user) return;
+
+    setSearchLoading(true);
+    try {
+      // Fetch users with completed palm readings, excluding current user
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select(`
+          username, 
+          full_name,
+          user_id,
+          handly_users!inner(reading_result)
+        `)
+        .ilike('username', `%${query}%`)
+        .neq('user_id', user.id)
+        .not('handly_users.reading_result', 'is', null)
+        .limit(10);
+
+      if (profiles) {
+        setUserSuggestions(profiles.map(p => ({
+          username: p.username,
+          full_name: p.full_name || p.username
+        })));
+      }
+    } catch (error) {
+      console.error('Error searching users:', error);
+    } finally {
+      setSearchLoading(false);
+    }
+  }, [user]);
+
+  // Debounced search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchUsers(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, searchUsers]);
 
   const handleCompare = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,18 +296,62 @@ const Compare = () => {
             <CardContent>
               <form onSubmit={handleCompare} className="max-w-md mx-auto space-y-4">
                 <div>
-                  <Label htmlFor="username" className="text-foreground">
-                    Enter username to compare with:
+                  <Label className="text-foreground">
+                    Search username to compare with:
                   </Label>
-                  <Input
-                    id="username"
-                    type="text"
-                    value={compareUsername}
-                    onChange={(e) => setCompareUsername(e.target.value)}
-                    placeholder="Username..."
-                    className="mt-2"
-                    required
-                  />
+                  <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={isPopoverOpen}
+                        className="w-full justify-between mt-2"
+                      >
+                        {compareUsername || "Search username..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput 
+                          placeholder="Type username..." 
+                          value={searchQuery}
+                          onValueChange={setSearchQuery}
+                        />
+                        <CommandList>
+                          <CommandEmpty>
+                            {searchLoading ? "Searching..." : "No users found."}
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {userSuggestions.map((suggestion) => (
+                              <CommandItem
+                                key={suggestion.username}
+                                value={suggestion.username}
+                                onSelect={(value) => {
+                                  setCompareUsername(value);
+                                  setSearchQuery('');
+                                  setIsPopoverOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    compareUsername === suggestion.username ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                <div className="flex flex-col">
+                                  <span className="font-medium">{suggestion.username}</span>
+                                  {suggestion.full_name !== suggestion.username && (
+                                    <span className="text-sm text-muted-foreground">{suggestion.full_name}</span>
+                                  )}
+                                </div>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <Button 
                   type="submit" 

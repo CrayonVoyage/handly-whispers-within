@@ -108,9 +108,14 @@ const Dashboard = () => {
 
         {/* Profile Summary */}
         <Card className="bg-card shadow-lg border-border rounded-2xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl font-playfair text-foreground">
+              My Profile
+            </CardTitle>
+          </CardHeader>
           <Collapsible open={profileExpanded} onOpenChange={setProfileExpanded}>
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
+            <CardContent className="pb-4">
+              <div className="flex flex-col items-center space-y-4">
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-12 w-12 border-2 border-primary/20">
                     <AvatarImage src={profile?.avatar_url || ''} />
@@ -118,17 +123,20 @@ const Dashboard = () => {
                       <User className="h-6 w-6 text-primary" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="text-left">
-                    <CardTitle className="text-lg font-playfair text-foreground">
+                  <div className="text-center">
+                    <p className="font-medium text-foreground">
                       {profile?.username || 'User'}
-                    </CardTitle>
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       {profile?.full_name || 'No name set'}
                     </p>
                   </div>
                 </div>
                 <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="sm" className="p-2">
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <span className="text-sm">
+                      {profileExpanded ? 'Show less' : 'Show more'}
+                    </span>
                     {profileExpanded ? (
                       <ChevronUp className="h-4 w-4" />
                     ) : (
@@ -137,9 +145,9 @@ const Dashboard = () => {
                   </Button>
                 </CollapsibleTrigger>
               </div>
-            </CardHeader>
+            </CardContent>
             <CollapsibleContent>
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 text-center">
                 {palmData ? (
                   <div className="space-y-2 text-foreground text-sm">
                     <p><span className="font-medium">Age:</span> {palmData.age}</p>
@@ -152,7 +160,7 @@ const Dashboard = () => {
               </CardContent>
             </CollapsibleContent>
           </Collapsible>
-          <CardContent className="pt-0">
+          <CardContent className="pt-0 text-center">
             <Button 
               onClick={() => navigate('/profile')}
               variant="outline"
@@ -174,18 +182,18 @@ const Dashboard = () => {
           <CardContent className="text-center">
             {palmData?.reading_result ? (
               <div className="text-foreground">
-                <p className="line-clamp-4">{palmData.reading_result}</p>
+                <p className="line-clamp-3 text-sm mb-4">{palmData.reading_result}</p>
                 <Button 
                   onClick={() => navigate('/palm-reading')}
                   variant="link"
-                  className="text-primary hover:text-primary/80 p-0 mt-2"
+                  className="text-primary hover:text-primary/80 p-0"
                 >
                   Read full analysis →
                 </Button>
               </div>
             ) : (
               <div className="text-foreground">
-                <p className="mb-4">Your palm reading isn't ready yet. Go to the Palm Reading page to generate it.</p>
+                <p className="mb-4 text-sm">Your palm reading isn't ready yet. Go to the Palm Reading page to generate it.</p>
                 <Button 
                   onClick={() => navigate('/palm-reading')}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -196,6 +204,7 @@ const Dashboard = () => {
             )}
           </CardContent>
         </Card>
+
 
         {/* Main Navigation Options */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -242,20 +251,6 @@ const Dashboard = () => {
         <div className="grid md:grid-cols-2 gap-4">
           <Card className="bg-card/50 border-border rounded-xl hover:bg-card/70 transition-colors cursor-pointer">
             <CardHeader 
-              onClick={() => navigate('/about')}
-              className="pb-3 text-center"
-            >
-              <div className="flex items-center justify-center space-x-2">
-                <Info className="h-5 w-5 text-muted-foreground" />
-                <CardTitle className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                  About Us
-                </CardTitle>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className="bg-card/50 border-border rounded-xl hover:bg-card/70 transition-colors cursor-pointer">
-            <CardHeader 
               onClick={() => navigate('/reading-method')}
               className="pb-3 text-center"
             >
@@ -263,6 +258,20 @@ const Dashboard = () => {
                 <Hand className="h-5 w-5 text-muted-foreground" />
                 <CardTitle className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                   Reading Method
+                </CardTitle>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="bg-card/50 border-border rounded-xl hover:bg-card/70 transition-colors cursor-pointer">
+            <CardHeader 
+              onClick={() => navigate('/about')}
+              className="pb-3 text-center"
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Info className="h-5 w-5 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  About Us
                 </CardTitle>
               </div>
             </CardHeader>

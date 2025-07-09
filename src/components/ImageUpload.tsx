@@ -1,6 +1,6 @@
 
 import React, { useRef, useState } from 'react';
-import { Hand, Upload, X, Loader2 } from 'lucide-react';
+import { Hand, Upload, X, Loader2, RotateCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { compressImage, formatFileSize, type CompressionResult } from '@/utils/imageCompression';
 
@@ -20,6 +20,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [showOrientationTip, setShowOrientationTip] = useState(false);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -44,6 +46,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const reader = new FileReader();
       reader.onload = () => {
         setPreview(reader.result as string);
+        // Check image orientation for tips
+        checkImageOrientation(result.compressedFile);
       };
       reader.readAsDataURL(result.compressedFile);
       
@@ -54,6 +58,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const reader = new FileReader();
       reader.onload = () => {
         setPreview(reader.result as string);
+        // Check image orientation for tips
+        checkImageOrientation(file);
       };
       reader.readAsDataURL(file);
     } finally {
@@ -64,9 +70,27 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleRemoveImage = () => {
     onImageChange(null);
     setPreview(null);
+    setRotation(0);
+    setShowOrientationTip(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const checkImageOrientation = (file: File) => {
+    const img = new Image();
+    img.onload = () => {
+      // Show tip if image appears to be landscape (wider than tall)
+      const isLandscape = img.width > img.height * 1.2;
+      setShowOrientationTip(isLandscape);
+    };
+    img.src = URL.createObjectURL(file);
+  };
+
+  const handleRotate = () => {
+    const newRotation = (rotation + 90) % 360;
+    setRotation(newRotation);
+    setShowOrientationTip(false); // Hide tip after rotation
   };
 
   const handleClick = () => {
@@ -102,19 +126,46 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               src={preview} 
               alt="Hand preview" 
               className="w-full h-56 object-cover rounded-xl"
+              style={{ transform: `rotate(${rotation}deg)` }}
             />
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              className="absolute top-3 right-3 rounded-full h-8 w-8 p-0"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemoveImage();
-              }}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="absolute top-3 right-3 flex gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="rounded-full h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRotate();
+                }}
+                title="Rotate image 90°"
+              >
+                <RotateCw className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                className="rounded-full h-8 w-8 p-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveImage();
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            {showOrientationTip && (
+              <div className="absolute bottom-3 left-3 right-3 bg-amber-50 border border-amber-200 rounded-lg p-2">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-amber-800">
+                    It looks like your hand is sideways. You can rotate the image for better analysis.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-8">

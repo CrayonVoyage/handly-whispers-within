@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -29,41 +28,50 @@ serve(async (req) => {
       non_dominant_hand_image 
     } = await req.json();
 
-    console.log('Generating palm reading for:', name);
+    console.log('Generating palm reading for:', name, {
+      age,
+      gender,
+      dominant_hand,
+      hasNonDominantImage: !!non_dominant_hand_image
+    });
 
     const prompt = 
       `
-    You are a modern, intuitive palm reader.  
-    You’ve just received a set of personal data and hand images from someone curious to explore who they are through the lines, shapes and energy of their hands.
+    You are an expert palm reader analyzing unique hand features.
 
-    Use the dominant hand photo (and the non-dominant if provided), along with their basic information — name, age, gender, and which hand they use the most — to create a rich, introspective, and concrete reading.
+    CRITICAL: You must analyze the SPECIFIC visual details in the provided hand image(s) and create a reading based on what you actually observe. Avoid generic palmistry language.
 
-    The Tone:
-    - Kind, respectful and explanatory
-    - Rational and concrete
-    - Symbolic when relevant, but never vague
-    - No predictions, no abstract metaphors, no fortune-telling
-    
-    Use Titles , bullet points and anything that make the reading easier  
-    Make it feel natural, like a good friend who knows about palm reading and who wants to gain your trust by being concrete and very clear about what he reads.
-    
-    The content should organically weave together:
-    - First part will be a synthesis of the full analysis using the name of the person, a view of the most important points as if they do not have time to read the full view.
-    - Then a detailled interpretation of their **life**, **head**, **heart**, and **fate** lines (if visible)  
-    - Observations about the **shape of their palm**, **fingers**, and **mounts**
-    
-    If both hands are provided, subtly explore the **contrast between inner nature (non-dominant)** and **developed traits (dominant)** — only if meaningful.
+    STEP 1 - DETAILED VISUAL ANALYSIS:
+    Look carefully at the provided hand image(s) and describe:
+    - The exact shape and length of the major lines (life, head, heart, fate if visible)
+    - Unique markings, breaks, or unusual patterns you can see
+    - The specific shape of the palm (square, rectangular, narrow, wide)
+    - Finger lengths and proportions relative to each other
+    - Visible mounts and their development
+    - Any distinctive characteristics that make this hand different from others
 
-    User input:
+    STEP 2 - CREATE PERSONALIZED READING:
+    Based on your specific observations, create a reading that:
+    - References the actual visual features you identified
+    - Explains how these specific features relate to personality traits
+    - Avoids generic statements that could apply to anyone
+    - Uses concrete, observable details to support interpretations
+
+    User Details:
     Name: ${name}  
     Age: ${age}  
     Gender: ${gender}  
-    Dominant hand: ${dominant_hand}  
-    ${non_dominant_hand_image ? 'Non-dominant hand image: provided' : 'Non-dominant hand image: not provided'}
+    Dominant hand: ${dominant_hand}
+
+    TONE: Professional, specific, and personalized. Reference what you actually see in the images.
     
-    Use everything you see and know to offer an explanation for someone not used to palm reading, who should trust your expertise.  
-    Think of this as the beginning of a quiet inner conversation.
-    
+    STRUCTURE:
+    1. **Quick Summary for ${name}**: Based on the most distinctive features you observe
+    2. **Line Analysis**: Specific interpretations of the major lines you can clearly see
+    3. **Hand Shape & Features**: What the overall structure and unique markings reveal
+    ${non_dominant_hand_image ? '4. **Hand Comparison**: Meaningful differences between dominant and non-dominant hands' : ''}
+
+    Remember: Base everything on actual visual observations, not generic palmistry templates.
 `;
 
     const messages = [
@@ -101,8 +109,8 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'gpt-4o',
         messages,
-        max_tokens: 800,
-        temperature: 0.7,
+        max_tokens: 1500,
+        temperature: 0.9,
       }),
     });
 
@@ -119,7 +127,19 @@ serve(async (req) => {
       throw new Error('No reading generated from OpenAI');
     }
 
-    console.log('Palm reading generated successfully');
+    // Log reading characteristics for debugging
+    const wordCount = reading.split(' ').length;
+    const hasPersonalization = reading.toLowerCase().includes(name.toLowerCase());
+    const uniqueFeatures = ['unusual', 'distinctive', 'specific', 'observe', 'notice'].some(word => 
+      reading.toLowerCase().includes(word)
+    );
+    
+    console.log('Palm reading generated successfully', {
+      wordCount,
+      hasPersonalization,
+      hasUniqueFeatures: uniqueFeatures,
+      readingPreview: reading.substring(0, 150) + '...'
+    });
 
     return new Response(JSON.stringify({ reading }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -128,18 +148,17 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in generate-palm-reading function:', error);
     
-    // Fallback mock reading for demo purposes
-    const mockReading = `Dear friend, your hand reveals a story written in lines of possibility and whispered dreams. The gentle curves that flow across your palm speak of a soul both grounded and reaching, someone who carries wisdom beyond their years.
+    // More specific fallback that acknowledges the limitation
+    const fallbackReading = `I apologize, ${name}, but I'm currently unable to analyze your hand images properly due to a technical issue. 
 
-Your life line traces a path of resilience, weaving through experiences that have shaped you into someone who values authentic connection. There's a strength in your hand's architecture that suggests you've learned to trust your intuition, even when the world around you demands logic over feeling.
+This appears to be a temporary problem with the image analysis system. Please try again in a few moments, or check that your images are:
+- Clear and well-lit
+- Showing your full palm
+- Taken from directly above your hand
 
-The heart line tells of a person who loves deeply but carefully, someone who understands that vulnerability is not weakness but the birthplace of genuine intimacy. Your hand speaks of emotional intelligence, of someone who can read the unspoken stories in others' eyes.
+Each hand is unique, and I want to give you a reading based on what I can actually observe in your specific palm lines and features, rather than providing a generic response.`;
 
-Looking at the shape and energy of your fingers, I see creativity that flows like water finding its course. You have the hands of someone who builds bridges—between ideas, between people, between what is and what could be. There's an artist's sensitivity paired with a pragmatist's wisdom.
-
-Your palm whispers of untold stories yet to unfold, of dreams that simmer beneath the surface waiting for their moment to emerge. Trust the map written in your hand. It knows the way forward, even when your mind cannot yet see the path clearly.`;
-
-    return new Response(JSON.stringify({ reading: mockReading }), {
+    return new Response(JSON.stringify({ reading: fallbackReading }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

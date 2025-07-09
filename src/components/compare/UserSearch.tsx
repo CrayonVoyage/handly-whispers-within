@@ -30,18 +30,26 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
 
     setSearchLoading(true);
     try {
-      // Fetch users with completed palm readings, excluding current user
+      // First get user_ids with completed readings
+      const { data: completedReadings } = await supabase
+        .from('handly_users')
+        .select('user_id')
+        .not('reading_result', 'is', null);
+
+      if (!completedReadings) {
+        setUserSuggestions([]);
+        return;
+      }
+
+      const userIdsWithReadings = completedReadings.map(r => r.user_id).filter(Boolean);
+
+      // Then fetch profiles that match the search and have completed readings
       const { data: profiles } = await supabase
         .from('profiles')
-        .select(`
-          username, 
-          full_name,
-          user_id,
-          handly_users!inner(reading_result)
-        `)
+        .select('username, full_name, user_id')
         .ilike('username', `%${query}%`)
         .neq('user_id', currentUserId)
-        .not('handly_users.reading_result', 'is', null)
+        .in('user_id', userIdsWithReadings)
         .limit(10);
 
       if (profiles) {

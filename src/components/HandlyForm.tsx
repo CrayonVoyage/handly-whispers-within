@@ -143,10 +143,10 @@ const HandlyForm = () => {
       console.log('Palm reading generated successfully');
       setPalmReading(reading);
       
-      // Save to database
+      // Save to database using upsert to handle existing records
       const { error: dbError } = await supabase
         .from('handly_users')
-        .insert({
+        .upsert({
           name: personalInfo.name,
           age: parseInt(personalInfo.age),
           gender: personalInfo.gender as any,
@@ -155,6 +155,8 @@ const HandlyForm = () => {
           non_dominant_hand_image_url: nonDominantHandUrl,
           reading_result: reading,
           user_id: user?.id || null
+        }, {
+          onConflict: 'user_id'
         });
 
       if (dbError) {

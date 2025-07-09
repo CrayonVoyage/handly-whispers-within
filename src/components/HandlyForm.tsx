@@ -7,7 +7,7 @@ import ImageUploadSection from './ImageUploadSection';
 import PalmReadingResult from './PalmReadingResult';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LogIn } from 'lucide-react';
+import { LogIn, Hand } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { generatePalmReading } from '@/services/palmReading';
@@ -323,14 +323,21 @@ const HandlyForm = () => {
           />
         )}
 
-        {/* Footer link */}
-        <div className="text-center">
-          <button
-            onClick={() => navigate('/reading-method')}
-            className="text-base text-violet-600 hover:text-violet-800 font-medium underline"
-          >
-            How does our reading method work?
-          </button>
+        {/* Footer link - Reading Method */}
+        <div className="flex justify-center">
+          <Card className="bg-card/50 border-border rounded-xl hover:bg-card/70 transition-colors cursor-pointer">
+            <CardHeader 
+              onClick={() => navigate('/reading-method')}
+              className="pb-3 text-center"
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Hand className="h-5 w-5 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  Reading Method
+                </CardTitle>
+              </div>
+            </CardHeader>
+          </Card>
         </div>
       </div>
     </div>

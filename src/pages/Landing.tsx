@@ -14,6 +14,9 @@ const Landing = () => {
           <div className="flex justify-center mb-6">
             <Hand className="h-16 w-16 text-primary" />
           </div>
+          <CardDescription className="text-muted-foreground text-sm mb-4 px-2">
+            🖐️ Handly is a free tool to explore your personality through palm reading. Upload two photos of your hands, and get a unique personal reading instantly.
+          </CardDescription>
           <CardTitle className="text-3xl font-playfair font-medium text-foreground">
             Welcome to Handly
           </CardTitle>

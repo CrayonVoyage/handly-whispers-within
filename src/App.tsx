@@ -21,18 +21,21 @@ const queryClient = new QueryClient();
 
 const AppRoutes = () => {
   const { user, loading } = useAuth();
+  
+  console.log('AppRoutes: Loading =', loading, 'User =', user?.email || 'No user');
 
   if (loading) {
+    console.log('AppRoutes: Showing loading screen');
     return (
-      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
-        <div className="text-navy-600">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground">Chargement...</div>
       </div>
     );
   }
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
         <Navigation />
         <Routes>
           <Route path="/" element={user ? <Dashboard /> : <Landing />} />

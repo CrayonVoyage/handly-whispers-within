@@ -5,6 +5,8 @@ import mysticalHand from '@/assets/mystical-hand.png';
 
 const Landing = () => {
   const navigate = useNavigate();
+  
+  console.log('Landing: Component rendering');
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -21,11 +23,9 @@ const Landing = () => {
         
         {/* Visuel mystique */}
         <div className="flex justify-center py-8">
-          <img 
-            src={mysticalHand} 
-            alt="Main mystique" 
-            className="max-w-md w-full h-auto opacity-90"
-          />
+          <div className="w-64 h-64 bg-primary/10 rounded-full flex items-center justify-center">
+            <div className="text-6xl text-primary">✋</div>
+          </div>
         </div>
         
         {/* Bouton centré */}

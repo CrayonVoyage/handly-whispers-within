@@ -92,9 +92,6 @@ const Dashboard = () => {
           <div className="flex justify-center mb-4">
             <Hand className="h-12 w-12 text-primary" />
           </div>
-          <p className="text-muted-foreground text-sm mb-4 max-w-md mx-auto">
-            🖐️ Handly is a free tool to explore your personality through palm reading. Upload two photos of your hands, and get a unique personal reading instantly.
-          </p>
           <h1 className="text-4xl font-playfair font-medium text-foreground mb-2">
             Handly
           </h1>

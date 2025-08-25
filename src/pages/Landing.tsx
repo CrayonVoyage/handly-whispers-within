@@ -17,10 +17,10 @@ const Landing = () => {
           <CardTitle className="text-3xl font-playfair font-medium text-foreground">
             Welcome to Handly
           </CardTitle>
-          <CardDescription className="text-muted-foreground text-base mt-2">
-            Your hands say more than you think.
-            Handly reads your palms to reveal your personal traits, emotions, and mindset.
-            Then, compare with others to see what you share — or where you differ.
+          <CardDescription className="text-muted-foreground text-base mt-2 space-y-1">
+            <div>Your hands say more than you think.</div>
+            <div>Handly reads your palms to reveal your personal traits, emotions, and mindset.</div>
+            <div>Then, compare with others to see what you share — or where you differ.</div>
           </CardDescription>
         </CardHeader>
         <CardContent className="px-8 pb-8 space-y-4">

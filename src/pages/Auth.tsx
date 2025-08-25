@@ -125,11 +125,16 @@ const Auth = () => {
           <CardTitle className="text-3xl font-playfair font-medium text-navy-800">
             {isLogin ? 'Sign In' : 'Sign Up'}
           </CardTitle>
-          <CardDescription className="text-navy-600 text-base mt-2">
-            {isLogin 
-              ? 'Sign in to your Handly account' 
-              : 'Create your Handly account'
-            }
+          <CardDescription className="text-navy-600 text-base mt-2 space-y-1">
+            {isLogin ? (
+              <>
+                <div>Sign in to your Handly account</div>
+                <div>Read your palms to reveal your personal traits</div>
+                <div>Compare with others to see what you share — or where you differ</div>
+              </>
+            ) : (
+              <div>Create your Handly account</div>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="px-8 pb-8">

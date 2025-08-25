@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import MarkdownRenderer from '../MarkdownRenderer';
 
 interface UserProfile {
   username: string;
@@ -179,9 +180,9 @@ export const PalmReadingComparison: React.FC<PalmReadingComparisonProps> = ({
               <CardTitle className="text-lg text-primary text-center">Your Palm Reading</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-foreground line-clamp-6">
-                {currentUser.palmData.reading_result}
-              </p>
+              <div className="text-sm text-foreground line-clamp-6">
+                <MarkdownRenderer content={currentUser.palmData.reading_result || ''} />
+              </div>
             </CardContent>
           </Card>
 
@@ -190,9 +191,9 @@ export const PalmReadingComparison: React.FC<PalmReadingComparisonProps> = ({
               <CardTitle className="text-lg text-secondary text-center">{compareUser.profile.username}'s Palm Reading</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-foreground line-clamp-6">
-                {compareUser.palmData.reading_result}
-              </p>
+              <div className="text-sm text-foreground line-clamp-6">
+                <MarkdownRenderer content={compareUser.palmData.reading_result || ''} />
+              </div>
             </CardContent>
           </Card>
         </div>

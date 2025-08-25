@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { supabase } from '@/integrations/supabase/client';
 import { Hand, Users, User, ChevronDown, ChevronUp, Info } from 'lucide-react';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 interface UserProfile {
   username: string;
@@ -184,7 +185,9 @@ const Dashboard = () => {
             <Collapsible open={readingExpanded} onOpenChange={setReadingExpanded}>
               <CardContent className="text-center">
                 <div className="text-foreground">
-                  <p className="line-clamp-3 text-sm mb-4">{palmData.reading_result}</p>
+                  <div className="line-clamp-3 text-sm mb-4">
+                    <MarkdownRenderer content={palmData.reading_result || ''} />
+                  </div>
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="flex items-center space-x-2 mx-auto">
                       <span className="text-sm">
@@ -201,8 +204,8 @@ const Dashboard = () => {
               </CardContent>
               <CollapsibleContent>
                 <CardContent className="pt-0 text-center">
-                  <div className="text-foreground text-sm whitespace-pre-wrap">
-                    {palmData.reading_result}
+                  <div className="text-foreground text-sm">
+                    <MarkdownRenderer content={palmData.reading_result || ''} />
                   </div>
                 </CardContent>
               </CollapsibleContent>

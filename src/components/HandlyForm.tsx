@@ -143,25 +143,27 @@ const HandlyForm = () => {
       console.log('Palm reading generated successfully');
       setPalmReading(reading);
       
-      // Save to database using upsert to handle existing records
-      const { error: dbError } = await supabase
-        .from('handly_users')
-        .upsert({
-          name: personalInfo.name,
-          age: parseInt(personalInfo.age),
-          gender: personalInfo.gender as any,
-          dominant_hand: personalInfo.dominant_hand as any,
-          dominant_hand_image_url: dominantHandUrl,
-          non_dominant_hand_image_url: nonDominantHandUrl,
-          reading_result: reading,
-          user_id: user?.id || null
-        }, {
-          onConflict: 'user_id'
-        });
+      // Save to database only if authenticated
+      if (user?.id) {
+        const { error: dbError } = await supabase
+          .from('handly_users')
+          .upsert({
+            name: personalInfo.name,
+            age: parseInt(personalInfo.age),
+            gender: personalInfo.gender as any,
+            dominant_hand: personalInfo.dominant_hand as any,
+            dominant_hand_image_url: dominantHandUrl,
+            non_dominant_hand_image_url: nonDominantHandUrl,
+            reading_result: reading,
+            user_id: user.id
+          }, {
+            onConflict: 'user_id'
+          });
 
-      if (dbError) {
-        console.error('Database error:', dbError);
-        throw dbError;
+        if (dbError) {
+          console.error('Database error:', dbError);
+          throw dbError;
+        }
       }
       
     } catch (error) {

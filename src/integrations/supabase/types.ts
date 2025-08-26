@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -97,7 +97,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_reading_for_compare: {
+        Args: { target_user_id: string }
+        Returns: {
+          age: number
+          dominant_hand: string
+          gender: string
+          palm_lines_data: Json
+          reading_result: string
+        }[]
+      }
+      list_completed_reading_user_ids: {
+        Args: Record<PropertyKey, never>
+        Returns: string[]
+      }
     }
     Enums: {
       gender_type: "Female" | "Male" | "Non-binary" | "Prefer not to say"

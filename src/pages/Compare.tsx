@@ -98,14 +98,15 @@ const Compare = () => {
         return;
       }
 
-      // Fetch their palm reading data
-      const { data: palmData } = await supabase
-        .from('handly_users')
-        .select('age, gender, dominant_hand, reading_result, palm_lines_data')
-        .eq('user_id', profileData.user_id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      // Fetch their palm reading data via secure RPC
+      const { data: rpcData, error: rpcError } = await supabase
+        .rpc('get_reading_for_compare', { target_user_id: profileData.user_id });
+
+      if (rpcError) {
+        throw rpcError;
+      }
+
+      const palmData: any = Array.isArray(rpcData) ? rpcData[0] : rpcData;
 
       if (!palmData || !palmData.reading_result) {
         toast({

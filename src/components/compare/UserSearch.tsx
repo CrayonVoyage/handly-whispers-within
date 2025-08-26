@@ -33,13 +33,11 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
 
     setSearchLoading(true);
     try {
-      // First get user_ids with completed readings
-      const { data: completedReadings, error: readingsError } = await supabase
-        .from('handly_users')
-        .select('user_id')
-        .not('reading_result', 'is', null);
+      // First get user_ids with completed readings (secured via RPC)
+      const { data: completedIds, error: readingsError } = await supabase
+        .rpc('list_completed_reading_user_ids');
 
-      console.log('📊 Completed readings query result:', { completedReadings, readingsError });
+      console.log('📊 Completed readings RPC result:', { completedIds, readingsError });
 
       if (readingsError) {
         console.error('❌ Error fetching completed readings:', readingsError);
@@ -47,13 +45,13 @@ export const UserSearch: React.FC<UserSearchProps> = ({ onUserSelect, loading, c
         return;
       }
 
-      if (!completedReadings || completedReadings.length === 0) {
+      if (!completedIds || completedIds.length === 0) {
         console.log('⚠️ No users with completed readings found');
         setUserSuggestions([]);
         return;
       }
 
-      const userIdsWithReadings = completedReadings.map(r => r.user_id).filter(Boolean);
+      const userIdsWithReadings = (completedIds as string[]).filter(Boolean);
       console.log('👥 User IDs with readings:', userIdsWithReadings);
 
       // Then fetch profiles that match the search and have completed readings

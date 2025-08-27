@@ -6,8 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, LogOut, Settings, Hand, ArrowLeft, Camera } from 'lucide-react';
+import { User, LogOut, Settings, Hand, ArrowLeft, Camera, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface UserProfile {
   id: string;
@@ -249,6 +260,57 @@ const Profile = () => {
     navigate('/');
   };
 
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    
+    try {
+      // Delete from handly_users table
+      const { error: handlyError } = await supabase
+        .from('handly_users')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (handlyError) {
+        console.error('Error deleting handly data:', handlyError);
+      }
+
+      // Delete from profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+      }
+
+      // Delete storage files
+      const { error: storageError } = await supabase.storage
+        .from('hand-images')
+        .remove([`${user.id}/avatar.jpg`, `${user.id}/avatar.png`, `${user.id}/avatar.jpeg`]);
+
+      if (storageError) {
+        console.error('Error deleting storage files:', storageError);
+      }
+
+      // Sign out and redirect
+      await signOut();
+      navigate('/');
+      
+      toast({
+        title: "Account deleted",
+        description: "Your account and all data have been permanently deleted."
+      });
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete account. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -427,6 +489,38 @@ const Profile = () => {
               )}
             </CardContent>
           </Card>
+          
+          {/* Delete Account Section */}
+          <div className="mt-8">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="destructive" 
+                  className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl py-3"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Erase my account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="rounded-2xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to delete your account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl"
+                  >
+                    Delete Account
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </div>
     </div>

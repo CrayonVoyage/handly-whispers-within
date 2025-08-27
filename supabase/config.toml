@@ -1,1 +1,7 @@
 project_id = "iibrvtujqfilrkbnraho"
+
+[functions.generate-palm-reading]
+verify_jwt = false
+
+[functions.batch-rerun-palm-readings]
+verify_jwt = false

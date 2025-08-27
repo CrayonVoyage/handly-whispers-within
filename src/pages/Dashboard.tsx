@@ -185,9 +185,15 @@ const Dashboard = () => {
             <Collapsible open={readingExpanded} onOpenChange={setReadingExpanded}>
               <CardContent className="text-center">
                 <div className="text-foreground">
-                  <div className="line-clamp-3 text-sm mb-4">
-                    <MarkdownRenderer content={palmData.reading_result.split('\n\n## ')[0] || ''} />
-                  </div>
+                  {!readingExpanded ? (
+                    <div className="line-clamp-3 text-sm mb-4">
+                      <MarkdownRenderer content={palmData.reading_result.substring(0, 200) + (palmData.reading_result.length > 200 ? '...' : '')} />
+                    </div>
+                  ) : (
+                    <div className="text-sm mb-4">
+                      <MarkdownRenderer content={palmData.reading_result} />
+                    </div>
+                  )}
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="flex items-center space-x-2 mx-auto">
                       <span className="text-sm">
@@ -203,11 +209,7 @@ const Dashboard = () => {
                 </div>
               </CardContent>
               <CollapsibleContent>
-                <CardContent className="pt-0 text-center">
-                  <div className="text-foreground text-sm">
-                    <MarkdownRenderer content={palmData.reading_result.split('\n\n## ').slice(1).map(section => '## ' + section).join('\n\n') || ''} />
-                  </div>
-                </CardContent>
+                {/* Content is now shown above in the expanded state */}
               </CollapsibleContent>
             </Collapsible>
           ) : (
